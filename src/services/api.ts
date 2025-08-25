@@ -99,4 +99,22 @@ export const getMyPointsByCompany = () => {
   return api.get('/points/my-points');
 };
 
+/**
+ * Função para buscar o estado das recompensas para o cliente logado.
+ * Corresponde ao endpoint: GET /rewards/my-status
+ */
+export const getMyRewardsStatus = () => {
+  return api.get('/rewards/my-status');
+};
+
+/**
+ * Função para um cliente resgatar uma recompensa.
+ * Corresponde ao endpoint: POST /rewards/redeem
+ * @param rewardId - O ID da recompensa a ser resgatada.
+ */
+export const redeemReward = (rewardId: number) => {
+  return api.post('/rewards/redeem', { reward_id: rewardId });
+};
+
+
 export default api;
