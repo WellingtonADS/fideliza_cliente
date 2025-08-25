@@ -103,7 +103,9 @@ const HomeScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Olá, {user?.name || 'Cliente'}!</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('EditProfileScreen')}>
+          <Text style={styles.title}>Olá, {user?.name || 'Cliente'}!</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={signOut}>
             <Text style={styles.logoutButton}>Sair</Text>
         </TouchableOpacity>
