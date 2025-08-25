@@ -89,6 +89,12 @@ const HomeScreen = ({ navigation }: Props) => {
           >
             <Text style={styles.detailsButtonText}>Ver Extrato Completo</Text>
           </TouchableOpacity>
+                  <TouchableOpacity 
+          style={styles.card} 
+          onPress={() => navigation.navigate('RewardsScreen')}
+        >
+          <Text style={styles.cardTitle}>Ver Prémios e Recompensas</Text>
+        </TouchableOpacity>
         </View>
       </>
     );
