@@ -1,5 +1,5 @@
 // src/screens/ResetPasswordScreen.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,18 +9,27 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import StyledTextInput from '../components/StyledTextInput';
 import { resetPassword } from '../services/api';
 
+type ResetPasswordRouteProp = RouteProp<AuthStackParamList, 'ResetPassword'>;
 type Props = NativeStackScreenProps<AuthStackParamList, 'ResetPassword'>;
 
 const ResetPasswordScreen = ({ navigation }: Props) => {
+  const route = useRoute<ResetPasswordRouteProp>();
   const [token, setToken] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (route.params?.token) {
+      setToken(route.params.token);
+    }
+  }, [route.params?.token]);
 
   const handleReset = async () => {
     if (!token || !newPassword || !confirmPassword) {
@@ -46,6 +55,8 @@ const ResetPasswordScreen = ({ navigation }: Props) => {
       setIsLoading(false);
     }
   };
+
+
 
   return (
     <SafeAreaView style={styles.container}>
