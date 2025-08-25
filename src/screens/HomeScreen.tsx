@@ -1,6 +1,8 @@
 // src/screens/HomeScreen.tsx
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { MainStackParamList } from '../navigation/MainNavigator';
 import { getDashboardData } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -15,7 +17,9 @@ interface DashboardData {
   qr_code_base64?: string; // O QR code é opcional, pois não está a vir da API ainda
 }
 
-const HomeScreen = () => {
+type Props = NativeStackScreenProps<MainStackParamList, 'HomePage'>;
+
+const HomeScreen = ({ navigation }: Props) => {
   const { user, signOut } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -56,7 +60,6 @@ const HomeScreen = () => {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Seu QR Code de Fidelidade</Text>
           <View style={styles.qrCodeContainer}>
-            {/* Etapa 3: Exibir o QR Code apenas se ele existir na resposta da API */}
             {data.qr_code_base64 ? (
               <Image
                 style={styles.qrCodeImage}
@@ -80,6 +83,12 @@ const HomeScreen = () => {
             <Text style={styles.infoLabel}>Última Loja Visitada:</Text>
             <Text style={styles.infoValue}>{ultimaLoja}</Text>
           </View>
+          <TouchableOpacity 
+            style={styles.detailsButton} 
+            onPress={() => navigation.navigate('PointHistoryScreen')}
+          >
+            <Text style={styles.detailsButtonText}>Ver Extrato Completo</Text>
+          </TouchableOpacity>
         </View>
       </>
     );
@@ -179,6 +188,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#FFFFFF',
+  },
+    detailsButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: '#3D5CFF',
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  detailsButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
