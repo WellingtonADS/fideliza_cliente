@@ -2,8 +2,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, Text } from 'react-native';
-
-// Importa a tela principal que já existe
 import HomeScreen from '../screens/HomeScreen';
 
 // Telas que ainda vamos criar. Usamos componentes temporários para evitar erros.

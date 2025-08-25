@@ -7,10 +7,10 @@ const api = axios.create({
   // IMPORTANTE: Substitua pela URL base da sua API do backend
   // Para emulador Android, use http://10.0.2.2:8000
   // Para emulador iOS ou dispositivo físico na mesma rede, use o IP da sua máquina
-  baseURL: 'http://10.0.2.2:8000/api/v1',
-  headers: {
+  baseURL: 'http://10.0.2.2:8000/api/v1'
+  /*headers: {
     'Content-Type': 'application/json',
-  },
+  },*/
 });
 
 /**
@@ -36,7 +36,7 @@ export const login = (credentials: UserCredentials) => {
   formData.append('username', credentials.email);
   formData.append('password', credentials.password);
 
-  return api.post('/token', formData, {
+  return api.post('/token', formData.toString(), {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
@@ -61,7 +61,33 @@ export const getMyProfile = () => {
 };
 
 
-// --- Outras funções da API que serão usadas nas próximas fases ---
+/**
+ * Função para buscar os dados do dashboard.
+ * Corresponde a um endpoint como: GET /dashboard/data
+ */
+export const getDashboardData = () => {
+  // NOTA: Certifique-se de que o seu backend tem um endpoint como este.
+  // Se o nome do endpoint for diferente, altere a string abaixo.
+  return api.get('/dashboard'); 
+};
+
+/**
+ * Função para solicitar a redefinição de senha.
+ * Corresponde ao endpoint: POST /request-password-recovery
+ * @param email - O e-mail do utilizador a recuperar.
+ */
+export const requestPasswordRecovery = (email: string) => {
+  return api.post('/request-password-recovery', { email });
+};
+
+/**
+ * Função para redefinir a senha do utilizador.
+ * Corresponde ao endpoint: POST /reset-password
+ */
+export const resetPassword = (token: string, new_password: string) => {
+  return api.post('/reset-password', { token, new_password });
+};
+
 
 // Função para buscar a lista de todas as empresas parceiras
 export const getCompanies = () => {
