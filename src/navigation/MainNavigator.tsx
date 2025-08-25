@@ -5,10 +5,11 @@ import { View, Text } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import PointHistoryScreen from '../screens/PointHistoryScreen';
 import RewardsScreen from '../screens/RewardsScreen';
+import EditProfileScreen from '../screens/EditProfileScreen';
 
 // Telas que ainda vamos criar. Usamos componentes temporários para evitar erros.
 const PointDetailScreen = () => <View><Text>Detalhe dos Pontos</Text></View>;
-const EditProfileScreen = () => <View><Text>Editar Perfil</Text></View>;
+
 
 // Define o tipo para os parâmetros de cada tela
 export type MainStackParamList = {
