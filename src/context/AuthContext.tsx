@@ -1,18 +1,19 @@
 // src/context/AuthContext.tsx
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { UserCredentials, UserRegistration } from '../types/auth';
-import { setAuthToken, login, getMyProfile, registerClient } from '../services/api';
+import { User, UserCredentials, UserRegistration } from '../types/auth';
+import { login as apiLogin, registerClient, getMyProfile, setAuthToken, login } from '../services/api';
 import axios from 'axios';
-import { User } from '../types/auth';
+
 
 interface AuthContextType {
   token: string | null;
   user: User | null;
   isLoading: boolean;
   signIn: (credentials: UserCredentials) => Promise<void>;
-  signUp: (userData: UserRegistration) => Promise<void>; // Nova função
+  signUp: (userData: UserRegistration) => Promise<void>;
   signOut: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -83,8 +84,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await AsyncStorage.removeItem('userToken');
   };
 
+  const refreshUser = async () => {
+    if (!token) return;
+    try {
+      const profileResponse = await getMyProfile();
+      setUser(profileResponse.data);
+    } catch (error) {
+      setUser(null);
+      setToken(null);
+      setAuthToken(undefined);
+      await AsyncStorage.removeItem('userToken');
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ token, user, isLoading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ token, user, isLoading, signIn, signUp, signOut, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
