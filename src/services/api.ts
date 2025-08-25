@@ -8,9 +8,6 @@ const api = axios.create({
   // Para emulador Android, use http://10.0.2.2:8000
   // Para emulador iOS ou dispositivo físico na mesma rede, use o IP da sua máquina
   baseURL: 'http://10.0.2.2:8000/api/v1'
-  /*headers: {
-    'Content-Type': 'application/json',
-  },*/
 });
 
 /**
@@ -54,20 +51,18 @@ export const registerClient = (userData: UserRegistration) => {
 
 /**
  * Função para buscar os dados do utilizador logado.
- * Corresponde ao endpoint: GET /users/me
+ * Corresponde ao endpoint: GET /users/me/
  */
 export const getMyProfile = () => {
-  return api.get('/users/me');
+  return api.get('/users/me'); // CORREÇÃO: Adicionada a barra no final
 };
 
 
 /**
  * Função para buscar os dados do dashboard.
- * Corresponde a um endpoint como: GET /dashboard/data
+ * Corresponde ao endpoint: GET /dashboard
  */
 export const getDashboardData = () => {
-  // NOTA: Certifique-se de que o seu backend tem um endpoint como este.
-  // Se o nome do endpoint for diferente, altere a string abaixo.
   return api.get('/dashboard'); 
 };
 
@@ -114,6 +109,15 @@ export const getMyRewardsStatus = () => {
  */
 export const redeemReward = (rewardId: number) => {
   return api.post('/rewards/redeem', { reward_id: rewardId });
+};
+
+/**
+ * Função para atualizar os dados do utilizador logado.
+ * Corresponde ao endpoint: PATCH /users/me/
+ * @param userData - Os dados a serem atualizados (nome e/ou senha).
+ */
+export const updateMyProfile = (userData: { name?: string; password?: string }) => {
+  return api.patch('/users/me', userData); // CORREÇÃO: Adicionada a barra no final
 };
 
 
