@@ -26,6 +26,7 @@ const PointDetailScreen = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
+        setLoading(true);
         const data = await getPointTransactionsByCompany(companyId);
         setTransactions(data);
       } catch (error) {
@@ -39,23 +40,31 @@ const PointDetailScreen = () => {
   }, [companyId]);
 
   const renderItem = ({ item }: { item: PointTransaction }) => {
-    const isCredit = item.points_added > 0;
-    const pointsText = isCredit ? `+${item.points_added}` : `${item.points_added}`;
-    const date = new Date(item.timestamp).toLocaleDateString('pt-BR', {
+    const isCredit = item.points > 0;
+    const pointsText = isCredit ? `+${item.points}` : `${item.points}`;
+    const date = new Date(item.created_at).toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
+    });
+    const time = new Date(item.created_at).toLocaleTimeString('pt-BR', {
       hour: '2-digit',
       minute: '2-digit',
     });
 
+    const transactionTitle = isCredit ? 'Pontos Ganhos' : 'Resgate de Prémio';
+    const transactionSource = item.awarded_by ? `Por: ${item.awarded_by.name}` : '';
+
     return (
       <View style={styles.transactionItem}>
-        <View>
-          <Text style={styles.transactionType}>
-            {item.transaction_type === 'reward_redeem' ? 'Resgate de Prémio' : 'Pontos Ganhos'}
+        <View style={styles.transactionDetails}>
+          <Text style={styles.transactionTitle}>{transactionTitle}</Text>
+          {!!transactionSource && (
+            <Text style={styles.transactionSource}>{transactionSource}</Text>
+          )}
+          <Text style={styles.transactionDate}>
+            {date} às {time}
           </Text>
-          <Text style={styles.transactionDate}>{date}</Text>
         </View>
         <Text style={[styles.points, { color: isCredit ? '#28a745' : '#dc3545' }]}>
           {pointsText}
@@ -78,9 +87,9 @@ const PointDetailScreen = () => {
       renderItem={renderItem}
       keyExtractor={(item) => item.id.toString()}
       style={styles.container}
-      contentContainerStyle={transactions.length === 0 ? styles.center : {}} 
+      contentContainerStyle={transactions.length === 0 ? styles.center : { paddingTop: 8 }}
       ListEmptyComponent={
-        <Text>Nenhuma transação encontrada.</Text>
+        <Text style={styles.emptyText}>Nenhuma transação encontrada.</Text>
       }
     />
   );
@@ -98,27 +107,45 @@ const styles = StyleSheet.create({
   },
   transactionItem: {
     backgroundColor: '#fff',
-    padding: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     marginVertical: 4,
-    marginHorizontal: 10,
-    borderRadius: 8,
+    marginHorizontal: 16,
+    borderRadius: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    elevation: 1,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
   },
-  transactionType: {
+  transactionDetails: {
+    flex: 1,
+    marginRight: 10,
+  },
+  transactionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 4,
+    color: '#333',
+  },
+  transactionSource: {
+    fontSize: 14,
+    color: '#555',
+    marginTop: 2,
   },
   transactionDate: {
     fontSize: 12,
-    color: '#6c757d',
+    color: '#888',
+    marginTop: 4,
   },
   points: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
+  },
+  emptyText: {
+    color: '#6c757d',
   },
 });
 
