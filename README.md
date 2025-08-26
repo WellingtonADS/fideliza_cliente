@@ -1,68 +1,71 @@
-# **Aplicação Cliente - Fideliza+ (React Native)**
+# **Fideliza+ - Aplicação Cliente (React Native)**
 
-Bem-vindo ao repositório da aplicação do cliente para o sistema **Fideliza+**. Esta aplicação foi construída em React Native e serve como a interface principal para os clientes interagirem com os seus programas de fidelidade.
+Bem-vindo ao repositório oficial da aplicação cliente do sistema **Fideliza+**. Este aplicativo foi desenvolvido para oferecer uma experiência intuitiva e eficiente para os clientes gerenciarem seus programas de fidelidade.
 
-## **✨ Funcionalidades Implementadas**
+## **📋 Visão Geral**
 
-* **Fluxo de Autenticação Completo:**  
-  * Tela de **Registro** para novos clientes (POST /register/client/).  
-  * Tela de **Login** segura (POST /token).  
-  * Gestão de sessão com tokens JWT.  
-* **Painel do Cliente (Dashboard):**  
-  * Exibição dos dados do usuário logado (nome e email).  
-  * Geração e exibição do **QR Code** de fidelidade único do cliente.  
-* **Consulta de Pontos e Prêmios:**  
-  * Busca e exibe o saldo de pontos do cliente em tempo real, agrupado por empresa (GET /points/my-points).  
-  * Lista todos os prêmios disponíveis, mostrando o progresso e o estado de resgate (redeemable) para cada um (GET /rewards/my-status).  
-* **Resgate de Prêmios:**  
-  * Botão interativo para resgatar prêmios.  
-  * Caixa de diálogo de confirmação para evitar resgates acidentais.  
-  * Comunicação com a API para "gastar" os pontos e registrar o resgate (POST /rewards/redeem).  
-  * Atualização automática do painel após o resgate.
-* **Reset de Senha:**  
-  * Suporte para redefinição de senha via link dinâmico (deep linking).
+O **Fideliza+** é uma solução completa para programas de fidelidade, permitindo que empresas recompensem seus clientes de forma prática e personalizada. Este aplicativo móvel é a interface principal para os clientes acessarem suas informações de pontos, prêmios e muito mais.
+
+## **✨ Funcionalidades Principais**
+
+- **Autenticação Segura:**
+  - Registro de novos clientes.
+  - Login com suporte a tokens JWT.
+- **Painel do Cliente:**
+  - Visualização de informações pessoais e QR Code único.
+- **Gestão de Pontos e Prêmios:**
+  - Consulta de saldo de pontos em tempo real.
+  - Listagem de prêmios disponíveis e status de resgate.
+- **Resgate de Prêmios:**
+  - Processo interativo e seguro para resgatar prêmios.
+- **Redefinição de Senha:**
+  - Suporte a deep linking para redefinição de senha.
 
 ## **🛠️ Tecnologias Utilizadas**
 
-* **Framework:** [React Native](https://reactnative.dev/)  
-* **Linguagem:** [TypeScript](https://www.typescriptlang.org/)  
-* **Estilização:** StyleSheet (API nativa do React Native)  
-* **Navegação:** React Navigation com suporte a deep linking.
+- **Framework:** [React Native](https://reactnative.dev/)
+- **Linguagem:** [TypeScript](https://www.typescriptlang.org/)
+- **Navegação:** [React Navigation](https://reactnavigation.org/) com suporte a deep linking
+- **Estilização:** StyleSheet (API nativa do React Native)
+- **Gerenciamento de Estado:** Context API
 
-## **🚀 Como Executar o Projeto Localmente**
+## **🚀 Configuração e Execução**
 
 ### **1. Pré-requisitos**
 
-* Ambiente de desenvolvimento React Native configurado (Node.js, JDK 17, Android Studio).  
-* O [servidor backend do Fideliza+](https://github.com/wellingtonads/fideliza_backend) em execução localmente.
+- Ambiente de desenvolvimento React Native configurado (Node.js, JDK 17, Android Studio).
+- Backend do **Fideliza+** em execução. Consulte o repositório [fideliza_backend](https://github.com/wellingtonads/fideliza_backend).
 
 ### **2. Configuração do Ambiente**
 
-1. **Clone o repositório:**  
+1. Clone o repositório:
    ```bash
-   git clone <URL_DO_SEU_REPOSITORIO_FRONTEND>
+   git clone <URL_DO_REPOSITORIO>
    cd fideliza_cliente
    ```
 
-2. **Instale as dependências:**  
+2. Instale as dependências:
    ```bash
    npm install
-   # ou, se usar Yarn
-   # yarn install
+   # ou
+   yarn install
    ```
 
-3. **Configure a Conexão com a API:**  
-   * Abra o arquivo `src/services/api.ts`.  
-   * Atualize a URL base da API para corresponder ao seu ambiente de desenvolvimento:  
-     * Para o **Emulador Android**, use: `http://10.0.2.2:8000/api/v1`  
-     * Para um **dispositivo físico** na mesma rede Wi-Fi, use o IP da sua máquina: `http://SEU_IP_LOCAL:8000/api/v1`.
+3. Configure a URL da API:
+   - Edite o arquivo `src/services/api.ts` e atualize a constante `API_BASE_URL`:
+     - Emulador Android: `http://10.0.2.2:8000/api/v1`
+     - Dispositivo físico: `http://<SEU_IP_LOCAL>:8000/api/v1`
 
-### **3. Executar a Aplicação**
+### **3. Executar o Aplicativo**
 
-1. Inicie um emulador a partir do Android Studio ou conecte um dispositivo físico.  
-2. No terminal, dentro da pasta `fideliza_cliente`, execute:  
+1. Inicie um emulador ou conecte um dispositivo físico.
+2. Execute o comando:
    ```bash
    npx react-native run-android
    ```
 
-A aplicação será compilada e instalada no seu emulador ou dispositivo, pronta para ser testada.
+O aplicativo será instalado e estará pronto para uso.
+
+## **📄 Licença**
+
+Este projeto está licenciado sob a [MIT License](LICENSE).
