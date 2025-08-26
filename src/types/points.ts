@@ -1,11 +1,17 @@
 // src/types/points.ts
 
+export interface UserInfo {
+  id: number;
+  name: string;
+}
+
 export interface PointTransaction {
   id: number;
-  points_added: number;
-  transaction_type: 'scan' | 'reward_redeem' | 'manual_add';
-  timestamp: string; // Formato ISO 8601 (e.g., "2023-10-27T10:00:00")
-  collaborator_name?: string; // Nome do colaborador que realizou a transação
+  points: number; // <--- CORREÇÃO APLICADA AQUI
+  created_at: string;
+  client?: UserInfo;
+  awarded_by?: UserInfo;
+  // Removidos campos duplicados ou desnecessários como 'timestamp' e 'transaction_type'
 }
 
 export interface CompanyPoints {
