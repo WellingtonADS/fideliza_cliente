@@ -78,10 +78,9 @@ const PointDetailScreen = () => {
       renderItem={renderItem}
       keyExtractor={(item) => item.id.toString()}
       style={styles.container}
+      contentContainerStyle={transactions.length === 0 ? styles.center : {}} 
       ListEmptyComponent={
-        <View style={styles.center}>
-          <Text>Nenhuma transação encontrada.</Text>
-        </View>
+        <Text>Nenhuma transação encontrada.</Text>
       }
     />
   );
