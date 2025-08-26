@@ -1,13 +1,15 @@
 // src/services/api.ts
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserCredentials, UserRegistration } from '../types/auth';
+import { PointTransaction } from '../types/points';
 
 // Crie uma instância do Axios
 const api = axios.create({
   // IMPORTANTE: Substitua pela URL base da sua API do backend
   // Para emulador Android, use http://10.0.2.2:8000
   // Para emulador iOS ou dispositivo físico na mesma rede, use o IP da sua máquina
-  baseURL: 'http://10.0.2.2:8000/api/v1'
+  baseURL: 'http://10.0.2.2:8000/api/v1',
 });
 
 /**
@@ -28,7 +30,6 @@ export const setAuthToken = (token?: string) => {
  * @param credentials - Email e password do utilizador.
  */
 export const login = (credentials: UserCredentials) => {
-  // A API espera dados de formulário, então precisamos formatá-los.
   const formData = new URLSearchParams();
   formData.append('username', credentials.email);
   formData.append('password', credentials.password);
@@ -54,16 +55,15 @@ export const registerClient = (userData: UserRegistration) => {
  * Corresponde ao endpoint: GET /users/me/
  */
 export const getMyProfile = () => {
-  return api.get('/users/me'); // CORREÇÃO: Adicionada a barra no final
+  return api.get('/users/me');
 };
-
 
 /**
  * Função para buscar os dados do dashboard.
  * Corresponde ao endpoint: GET /dashboard
  */
 export const getDashboardData = () => {
-  return api.get('/dashboard'); 
+  return api.get('/dashboard');
 };
 
 /**
@@ -83,15 +83,39 @@ export const resetPassword = (token: string, new_password: string) => {
   return api.post('/reset-password', { token, new_password });
 };
 
-
-// Função para buscar a lista de todas as empresas parceiras
+/**
+ * Função para buscar a lista de todas as empresas parceiras.
+ * Corresponde ao endpoint: GET /companies
+ */
 export const getCompanies = () => {
   return api.get('/companies');
 };
 
-// Função para buscar os pontos do cliente por empresa
+/**
+ * Função para buscar os pontos do cliente por empresa.
+ * Corresponde ao endpoint: GET /points/my-points
+ */
 export const getMyPointsByCompany = () => {
   return api.get('/points/my-points');
+};
+
+/**
+ * Função para buscar o histórico de transações de pontos do cliente para uma empresa específica.
+ * Corresponde ao endpoint: GET /points/my-transactions/:companyId
+ */
+export const getPointTransactionsByCompany = async (companyId: number): Promise<PointTransaction[]> => {
+  try {
+    const token = await AsyncStorage.getItem('userToken');
+    const response = await api.get(`/points/my-transactions/${companyId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar transações da empresa:', error);
+    throw error;
+  }
 };
 
 /**
@@ -117,8 +141,7 @@ export const redeemReward = (rewardId: number) => {
  * @param userData - Os dados a serem atualizados (nome e/ou senha).
  */
 export const updateMyProfile = (userData: { name?: string; password?: string }) => {
-  return api.patch('/users/me', userData); // CORREÇÃO: Adicionada a barra no final
+  return api.patch('/users/me', userData);
 };
-
 
 export default api;
