@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   FlatList,
   ActivityIndicator,
-  TouchableOpacity,
+  TouchableOpacity, // Importado e usado
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
@@ -74,12 +74,24 @@ const PointHistoryScreen = ({ navigation }: Props) => {
         data={pointsData}
         keyExtractor={(item) => item.company.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          // ------ INÍCIO DA CORREÇÃO ------
+          <TouchableOpacity
+            style={styles.card}
+            // Navega para a tela 'PointDetail' passando os dados da empresa
+            onPress={() =>
+              navigation.navigate('PointDetail', {
+                companyId: item.company.id,
+                companyName: item.company.name,
+              })
+            }
+          >
             <Text style={styles.companyName}>{item.company.name}</Text>
             <Text style={styles.pointsText}>
-              Saldo de Pontos: <Text style={styles.pointsValue}>{item.total_points}</Text>
+              Saldo de Pontos:{' '}
+              <Text style={styles.pointsValue}>{item.total_points}</Text>
             </Text>
-          </View>
+          </TouchableOpacity>
+          // ------ FIM DA CORREÇÃO ------
         )}
         ListEmptyComponent={
           <View style={styles.centerContent}>
