@@ -22,7 +22,7 @@ interface PointsByCompany {
   };
 }
 
-type Props = NativeStackScreenProps<MainStackParamList, 'PointHistoryScreen'>;
+type Props = NativeStackScreenProps<MainStackParamList, 'PointHistory'>;
 
 const PointHistoryScreen = ({ navigation }: Props) => {
   const [pointsData, setPointsData] = useState<PointsByCompany[]>([]);
