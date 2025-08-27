@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
-import getDashboardData from '../services/api';
+import { getClientDashboard } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { DashboardData } from '../types/dashboard';
 
@@ -30,8 +30,8 @@ const HomeScreen = ({ navigation }: Props) => {
       try {
         setLoading(true);
         setError(null);
-        const response = await getDashboardData({});
-        setData(response.data); // A sua API retorna os dados dentro de 'data'
+        const response = await getClientDashboard();
+        setData(response);
       } catch (err) {
         setError('Não foi possível carregar os dados do dashboard.');
         console.error(err);
