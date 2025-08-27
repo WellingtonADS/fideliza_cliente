@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 10,
     marginRight: 15,
+    backgroundColor: '#4A4A6A', // Cor de fundo para o placeholder
   },
   cardInfo: {
     flex: 1,
