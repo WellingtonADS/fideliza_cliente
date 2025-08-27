@@ -24,7 +24,7 @@ interface RewardStatus {
   points_to_redeem: number;
 }
 
-type Props = NativeStackScreenProps<MainStackParamList, 'RewardsScreen'>;
+type Props = NativeStackScreenProps<MainStackParamList, 'Rewards'>;
 
 const RewardsScreen = ({ navigation }: Props) => {
   const [rewards, setRewards] = useState<RewardStatus[]>([]);
