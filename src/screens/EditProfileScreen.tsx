@@ -15,7 +15,7 @@ import { useAuth } from '../context/AuthContext';
 import { updateMyProfile } from '../services/api';
 import StyledTextInput from '../components/StyledTextInput';
 
-type Props = NativeStackScreenProps<MainStackParamList, 'EditProfileScreen'>;
+type Props = NativeStackScreenProps<MainStackParamList, 'EditProfile'>;
 
 const EditProfileScreen = ({ navigation }: Props) => {
   const { user, refreshUser } = useAuth(); // Usamos refreshUser para atualizar o contexto
