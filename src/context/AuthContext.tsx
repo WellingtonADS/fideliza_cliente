@@ -1,10 +1,8 @@
-// src/context/AuthContext.tsx
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { User, UserCredentials, UserRegistration } from '../types/auth';
-import { login as apiLogin, registerClient, getMyProfile, setAuthToken, login } from '../services/api';
+import { login as apiLogin, registerClient, getMyProfile, setAuthToken } from '../services/api';
 import axios from 'axios';
-
 
 interface AuthContextType {
   token: string | null;
@@ -16,7 +14,8 @@ interface AuthContextType {
   refreshUser: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// CORREÇÃO: Adicionado 'export' para que o contexto possa ser importado em outros lugares
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
@@ -45,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signIn = async (credentials: UserCredentials) => {
     try {
-      const response = await login(credentials);
+      const response = await apiLogin(credentials);
       const { access_token } = response.data;
       setToken(access_token);
       setAuthToken(access_token);
@@ -62,16 +61,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Nova função de registo
   const signUp = async (userData: UserRegistration) => {
     try {
-      // 1. Regista o novo utilizador
       await registerClient(userData);
-      // 2. Após o registo bem-sucedido, faz o login automaticamente
       await signIn({ email: userData.email, password: userData.password });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data?.detail) {
-         throw new Error(error.response.data.detail); // Ex: "Email já registado"
+         throw new Error(error.response.data.detail);
       }
       throw new Error('Ocorreu um erro ao tentar registar. Tente novamente.');
     }
@@ -90,10 +86,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const profileResponse = await getMyProfile();
       setUser(profileResponse.data);
     } catch (error) {
-      setUser(null);
-      setToken(null);
-      setAuthToken(undefined);
-      await AsyncStorage.removeItem('userToken');
+      await signOut();
     }
   };
 
