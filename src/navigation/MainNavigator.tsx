@@ -1,4 +1,3 @@
-// src/navigation/MainNavigator.tsx
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
@@ -6,16 +5,16 @@ import PointHistoryScreen from '../screens/PointHistoryScreen';
 import RewardsScreen from '../screens/RewardsScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import PointDetailScreen from '../screens/PointDetailScreen';
+import CompaniesScreen from '../screens/CompaniesScreen';
 
-
-// Define o tipo para os parâmetros de cada tela
+// CORREÇÃO: Nomes das rotas padronizados para consistência
 export type MainStackParamList = {
-  HomePage: undefined;
-  PointHistoryScreen: undefined;
-  RewardsScreen: undefined; 
-  PointDetailScreen: { companyId: number };
-  EditProfileScreen: undefined;
+  Home: undefined;
+  PointHistory: undefined;
+  Rewards: undefined; 
+  EditProfile: undefined;
   PointDetail: { companyId: number; companyName: string };
+  Companies: undefined;
 };
 
 const MainStack = createNativeStackNavigator<MainStackParamList>();
@@ -23,14 +22,12 @@ const MainStack = createNativeStackNavigator<MainStackParamList>();
 const MainNavigator = () => {
   return (
     <MainStack.Navigator screenOptions={{ headerShown: false }}>
-      <MainStack.Screen name="HomePage" component={HomeScreen} options={{ title: 'Home' }} />
-      <MainStack.Screen name="PointHistoryScreen" component={PointHistoryScreen} options={{ title: 'Histórico de Pontos' }} />
-      <MainStack.Screen name="RewardsScreen" component={RewardsScreen} options={{ title: 'Recompensas' }} />
-      <MainStack.Screen name="PointDetailScreen" component={PointDetailScreen} options={{ title: 'Detalhes dos Pontos' }} />
-      <MainStack.Screen name="EditProfileScreen" component={EditProfileScreen} options={{ title: 'Editar Perfil' }} />
-      <MainStack.Screen name="PointDetail" component={PointDetailScreen} options={({ route }) => ({
-          title: route.params?.companyName || 'Detalhes da Empresa',
-        })} />
+      <MainStack.Screen name="Home" component={HomeScreen} />
+      <MainStack.Screen name="PointHistory" component={PointHistoryScreen} />
+      <MainStack.Screen name="Rewards" component={RewardsScreen} />
+      <MainStack.Screen name="EditProfile" component={EditProfileScreen} />
+      <MainStack.Screen name="PointDetail" component={PointDetailScreen} />
+      <MainStack.Screen name="Companies" component={CompaniesScreen} />
     </MainStack.Navigator>
   );
 };
