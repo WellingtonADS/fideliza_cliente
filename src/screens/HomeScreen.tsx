@@ -1,25 +1,25 @@
-// src/screens/HomeScreen.tsx
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  SafeAreaView,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
-import { getDashboardData } from '../services/api';
+import getDashboardData from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { DashboardData } from '../types/dashboard';
 
-// Etapa 1: Interface atualizada para corresponder à API real
-interface DashboardData {
-  total_points: number;
-  last_activity: {
-    awarded_by: {
-      name: string;
-    };
-  } | null; // A atividade pode ser nula se não houver nenhuma
-  qr_code_base64?: string; // O QR code é opcional, pois não está a vir da API ainda
-}
-
-type Props = NativeStackScreenProps<MainStackParamList, 'HomePage'>;
+// CORREÇÃO: Alinhado o nome da rota para 'Home'
+type Props = NativeStackScreenProps<MainStackParamList, 'Home'>;
 
 const HomeScreen = ({ navigation }: Props) => {
+  // CORREÇÃO: Usar 'signOut' em vez de 'logout'
   const { user, signOut } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,8 +30,8 @@ const HomeScreen = ({ navigation }: Props) => {
       try {
         setLoading(true);
         setError(null);
-        const response = await getDashboardData();
-        setData(response.data);
+        const response = await getDashboardData({});
+        setData(response.data); // A sua API retorna os dados dentro de 'data'
       } catch (err) {
         setError('Não foi possível carregar os dados do dashboard.');
         console.error(err);
@@ -52,11 +52,11 @@ const HomeScreen = ({ navigation }: Props) => {
       return <Text style={styles.errorText}>{error || 'Dados não encontrados.'}</Text>;
     }
 
-    // Etapa 2: Lógica para extrair os dados da estrutura aninhada
-    const ultimaLoja = data.last_activity ? data.last_activity.awarded_by.name : 'Nenhuma';
+    // Substitua 'awarded_by' por uma propriedade existente, por exemplo 'company'
+    const ultimaLoja = data.last_activity?.company?.name ?? 'Nenhuma';
 
     return (
-      <>
+      <ScrollView>
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Seu QR Code de Fidelidade</Text>
           <View style={styles.qrCodeContainer}>
@@ -83,27 +83,39 @@ const HomeScreen = ({ navigation }: Props) => {
             <Text style={styles.infoLabel}>Última Loja Visitada:</Text>
             <Text style={styles.infoValue}>{ultimaLoja}</Text>
           </View>
-          <TouchableOpacity 
-            style={styles.detailsButton} 
-            onPress={() => navigation.navigate('PointHistoryScreen')}
-          >
-            <Text style={styles.detailsButtonText}>Ver Extrato Completo</Text>
-          </TouchableOpacity>
-                  <TouchableOpacity 
-          style={styles.card} 
-          onPress={() => navigation.navigate('RewardsScreen')}
-        >
-          <Text style={styles.cardTitle}>Ver Prémios e Recompensas</Text>
-        </TouchableOpacity>
         </View>
-      </>
+
+        {/* Secção de Botões de Navegação */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => navigation.navigate('PointHistory')}
+          >
+            <Text style={styles.buttonText}>Ver Extrato Completo</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => navigation.navigate('Companies')}
+          >
+            <Text style={styles.buttonText}>Explorar Lojas</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => navigation.navigate('Rewards')}
+          >
+            <Text style={styles.buttonText}>Ver Prémios e Recompensas</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     );
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate('EditProfileScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
           <Text style={styles.title}>Olá, {user?.name || 'Cliente'}!</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={signOut}>
@@ -117,6 +129,7 @@ const HomeScreen = ({ navigation }: Props) => {
   );
 };
 
+// Seus estilos permanecem os mesmos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -140,8 +153,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 20,
-    alignItems: 'center',
+    paddingHorizontal: 20,
+    justifyContent: 'center',
   },
   errorText: {
     color: '#FF6B6B',
@@ -174,6 +187,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     backgroundColor: '#FFFFFF',
+    borderRadius: 8,
   },
   qrCodePlaceholder: {
     justifyContent: 'center',
@@ -197,15 +211,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FFFFFF',
   },
-    detailsButton: {
-    marginTop: 20,
-    paddingVertical: 10,
+  buttonContainer: {
+    width: '100%',
+    marginTop: 10,
+  },
+  button: {
+    marginTop: 10,
+    paddingVertical: 12,
     paddingHorizontal: 15,
     backgroundColor: '#3D5CFF',
     borderRadius: 8,
     alignItems: 'center',
   },
-  detailsButtonText: {
+  buttonText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
