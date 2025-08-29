@@ -6,7 +6,7 @@ import { CompanyDetails } from '../types/company';
 import { DashboardData } from '../types/dashboard';
 
 const api = axios.create({
-  baseURL: 'http://10.0.2.2:8000/api/v1',
+  baseURL: 'https://fideliza-backend.onrender.com/api/v1',
 });
 
 export const setAuthToken = (token?: string) => {
