@@ -107,6 +107,13 @@ const HomeScreen = ({ navigation }: Props) => {
           >
             <Text style={styles.buttonText}>Ver Prémios e Recompensas</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => navigation.navigate('EditProfile')}
+          >
+            <Text style={styles.buttonText}>Editar Perfil</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     );
@@ -114,17 +121,72 @@ const HomeScreen = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <View style={styles.header}>
           <Text style={styles.title}>Olá, {user?.name || 'Cliente'}!</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={signOut}>
+          <TouchableOpacity onPress={signOut}>
             <Text style={styles.logoutButton}>Sair</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.content}>
-        {renderContent()}
-      </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Seu QR Code de Fidelidade</Text>
+          <View style={styles.qrCodeContainer}>
+            {data?.qr_code_base64 ? (
+              <Image
+                style={styles.qrCodeImage}
+                source={{ uri: `data:image/png;base64,${data.qr_code_base64}` }}
+              />
+            ) : (
+              <View style={[styles.qrCodeImage, styles.qrCodePlaceholder]}>
+                <Text style={styles.qrCodePlaceholderText}>QR Code indisponível</Text>
+              </View>
+            )}
+          </View>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Resumo de Pontos</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Total de Pontos:</Text>
+            <Text style={styles.infoValue}>{data?.total_points || 0}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Última Loja Visitada:</Text>
+            <Text style={styles.infoValue}>{data?.last_activity?.company?.name || 'Nenhuma'}</Text>
+          </View>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => navigation.navigate('PointHistory')}
+          >
+            <Text style={styles.buttonText}>Ver Extrato Completo</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => navigation.navigate('Companies')}
+          >
+            <Text style={styles.buttonText}>Explorar Lojas</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => navigation.navigate('Rewards')}
+          >
+            <Text style={styles.buttonText}>Ver Prémios e Recompensas</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => navigation.navigate('EditProfile')}
+          >
+            <Text style={styles.buttonText}>Editar Perfil</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -135,16 +197,36 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0A0A2A',
   },
+  contentContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
   header: {
     padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#FFFFFF',
+  },
+  editProfileButton: {
+    marginLeft: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: '#3D5CFF',
+    borderRadius: 8,
+  },
+  editProfileText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   logoutButton: {
     fontSize: 16,

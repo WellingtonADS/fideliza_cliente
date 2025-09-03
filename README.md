@@ -16,6 +16,8 @@ O **Fideliza+** é uma solução completa para programas de fidelidade, permitin
 - **Gestão de Pontos e Prêmios:**
   - Consulta de saldo de pontos em tempo real.
   - Listagem de prêmios disponíveis e status de resgate.
+- **Histórico de Pontos:**
+  - Visualização detalhada das transações de pontos realizadas.
 - **Resgate de Prêmios:**
   - Processo interativo e seguro para resgatar prêmios.
 - **Redefinição de Senha:**
@@ -28,6 +30,7 @@ O **Fideliza+** é uma solução completa para programas de fidelidade, permitin
 - **Navegação:** [React Navigation](https://reactnavigation.org/) com suporte a deep linking
 - **Estilização:** StyleSheet (API nativa do React Native)
 - **Gerenciamento de Estado:** Context API
+- **Comunicação com API:** Axios
 
 ## **🚀 Configuração e Execução**
 
@@ -65,6 +68,18 @@ O **Fideliza+** é uma solução completa para programas de fidelidade, permitin
    ```
 
 O aplicativo será instalado e estará pronto para uso.
+
+## **📄 Estrutura do Projeto**
+
+- **src/**: Contém todo o código-fonte do aplicativo.
+  - **assets/**: Recursos estáticos como imagens e fontes.
+  - **components/**: Componentes reutilizáveis da interface.
+  - **context/**: Gerenciamento de estado global com Context API.
+  - **navigation/**: Configuração de navegação com React Navigation.
+  - **screens/**: Telas principais do aplicativo.
+  - **services/**: Configuração de comunicação com a API.
+  - **styles/**: Estilos globais e temas.
+  - **types/**: Definições de tipos TypeScript.
 
 ## **📄 Licença**
 
