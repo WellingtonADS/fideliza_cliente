@@ -5,7 +5,7 @@ buildscript {
         compileSdkVersion = 36
         targetSdkVersion = 36
         ndkVersion = "27.1.12297006"
-        kotlinVersion = "2.1.20"
+        kotlinVersion = "2.1.20" // Atualizado para alinhar com fideliza_gestao
     }
     repositories {
         google()
@@ -19,3 +19,28 @@ buildscript {
 }
 
 apply plugin: "com.facebook.react.rootproject"
+
+subprojects {
+    project.configurations.all {
+        resolutionStrategy {
+            // Alinhado com fideliza_gestao
+            force 'androidx.media:media:1.0.0'
+            force 'androidx.activity:activity:1.7.2'
+            force 'androidx.fragment:fragment:1.5.7'
+            force 'androidx.appcompat:appcompat:1.6.1'
+            force 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+
+            // Exclusões mantidas
+            exclude group: 'com.android.support', module: 'support-compat'
+            exclude group: 'com.android.support', module: 'support-core-utils'
+            exclude group: 'com.android.support', module: 'support-core-ui'
+            exclude group: 'com.android.support', module: 'support-fragment'
+
+            // Força uma única versão da biblioteca androidx.lifecycle
+            force 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+            // Exclui dependências conflitantes
+            exclude group: 'androidx.lifecycle', module: 'lifecycle-runtime'
+            exclude group: 'androidx.lifecycle', module: 'lifecycle-runtime-ktx'
+        }
+    }
+}

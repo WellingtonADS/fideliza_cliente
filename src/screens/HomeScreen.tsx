@@ -14,6 +14,7 @@ import { MainStackParamList } from '../navigation/MainNavigator';
 import { getClientDashboard } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { DashboardData } from '../types/dashboard';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // CORREÇÃO: Alinhado o nome da rota para 'Home'
 type Props = NativeStackScreenProps<MainStackParamList, 'Home'>;
@@ -120,7 +121,11 @@ const HomeScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <Icon name="home" size={30} color="#FFFFFF" />
+        <Text style={styles.headerText}>Início</Text>
+      </View>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.header}>
           <Text style={styles.title}>Olá, {user?.name || 'Cliente'}!</Text>
@@ -193,6 +198,21 @@ const HomeScreen = ({ navigation }: Props) => {
 
 // Seus estilos permanecem os mesmos
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#0A0A2A',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#1E1E3F',
+  },
+  headerText: {
+    marginLeft: 10,
+    fontSize: 20,
+    color: '#FFFFFF',
+  },
   container: {
     flex: 1,
     backgroundColor: '#0A0A2A',
@@ -201,42 +221,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 20,
   },
-  header: {
-    padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#FFFFFF',
   },
-  editProfileButton: {
-    marginLeft: 10,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    backgroundColor: '#3D5CFF',
-    borderRadius: 8,
-  },
-  editProfileText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
   logoutButton: {
     fontSize: 16,
     color: '#FDD835',
     fontWeight: 'bold',
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 20,
-    justifyContent: 'center',
   },
   errorText: {
     color: '#FF6B6B',

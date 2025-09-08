@@ -13,6 +13,7 @@ import { useAuth } from '../context/AuthContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import StyledTextInput from '../components/StyledTextInput';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
@@ -46,7 +47,11 @@ const RegisterScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <Icon name="person-add" size={30} color="#FFFFFF" />
+        <Text style={styles.headerText}>Registrar</Text>
+      </View>
       <View style={styles.content}>
         <Text style={styles.title}>Inscreva-se</Text>
         <Text style={styles.subtitle}>Entre com e-mail e senha:</Text>
@@ -98,9 +103,20 @@ const RegisterScreen = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: '#0A0A2A',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#1E1E3F',
+  },
+  headerText: {
+    marginLeft: 10,
+    fontSize: 20,
+    color: '#FFFFFF',
   },
   content: {
     flex: 1,

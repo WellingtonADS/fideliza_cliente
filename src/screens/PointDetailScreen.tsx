@@ -13,6 +13,7 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getPointTransactionsByCompany } from '../services/api';
 import { PointTransaction } from '../types/points';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 type PointDetailScreenRouteProp = RouteProp<MainStackParamList, 'PointDetail'>;
 
@@ -82,20 +83,41 @@ const PointDetailScreen = () => {
   }
 
   return (
-    <FlatList
-      data={transactions}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id.toString()}
-      style={styles.container}
-      contentContainerStyle={transactions.length === 0 ? styles.center : { paddingTop: 8 }}
-      ListEmptyComponent={
-        <Text style={styles.emptyText}>Nenhuma transação encontrada.</Text>
-      }
-    />
+    <View style={styles.safeArea}>
+      <View style={styles.header}>
+        <Icon name="receipt" size={30} color="#FFFFFF" />
+        <Text style={styles.headerText}>Detalhes dos Pontos</Text>
+      </View>
+      <FlatList
+        data={transactions}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
+        style={styles.container}
+        contentContainerStyle={transactions.length === 0 ? styles.center : { paddingTop: 8 }}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>Nenhuma transação encontrada.</Text>
+        }
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#0A0A2A',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#1E1E3F',
+  },
+  headerText: {
+    marginLeft: 10,
+    fontSize: 20,
+    color: '#FFFFFF',
+  },
   center: {
     flex: 1,
     justifyContent: 'center',

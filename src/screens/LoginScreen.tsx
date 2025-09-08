@@ -14,6 +14,7 @@ import { useAuth } from '../context/AuthContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import StyledTextInput from '../components/StyledTextInput'; // Nosso novo componente
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // Tipagem para as props de navegação
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
@@ -45,10 +46,13 @@ const LoginScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <Icon name="login" size={30} color="#FFFFFF" />
+        <Text style={styles.headerText}>Login</Text>
+      </View>
       <View style={styles.content}>
-        {/* Adicione o seu logo na pasta src/assets/ e descomente a linha abaixo */}
-        {/* <Image source={require('../assets/logo.png')} style={styles.logo} /> */}
+        <Image source={require('../assets/images/logo_fideliza.png')} style={styles.logo} />
         <Text style={styles.title}>Fideliza+</Text>
         <Text style={styles.subtitle}>O programa de fidelidade que te valoriza</Text>
 
@@ -90,33 +94,42 @@ const LoginScreen = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    backgroundColor: '#0A0A2A', // Cor de fundo escura
+    backgroundColor: '#0A0A2A',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#1E1E3F',
+  },
+  headerText: {
+    marginLeft: 10,
+    fontSize: 20,
+    color: '#FFFFFF',
   },
   content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 30,
+    padding: 20,
   },
   logo: {
-    width: 150,
-    height: 150,
+    width: 400,
+    height: 140,
     marginBottom: 20,
-    resizeMode: 'contain',
   },
   title: {
-    fontSize: 48,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#FFFFFF',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
-    color: '#B0B0B0',
-    marginBottom: 40,
-    textAlign: 'center',
+    color: '#FFFFFF',
+    marginBottom: 20,
   },
   button: {
     backgroundColor: '#3D5CFF',

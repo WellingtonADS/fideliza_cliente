@@ -13,6 +13,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import StyledTextInput from '../components/StyledTextInput';
 import { requestPasswordRecovery } from '../services/api';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'ForgotPassword'>;
 
@@ -50,7 +51,11 @@ const ForgotPasswordScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <Icon name="lock-reset" size={30} color="#FFFFFF" />
+        <Text style={styles.headerText}>Recuperar Senha</Text>
+      </View>
       <View style={styles.content}>
         <Text style={styles.title}>Recuperar Senha</Text>
         <Text style={styles.subtitle}>
@@ -83,9 +88,20 @@ const ForgotPasswordScreen = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: '#0A0A2A',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#1E1E3F',
+  },
+  headerText: {
+    marginLeft: 10,
+    fontSize: 20,
+    color: '#FFFFFF',
   },
   content: {
     flex: 1,

@@ -13,6 +13,7 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getMyRewardsStatus, redeemReward } from '../services/api';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // Tipagem para os dados que a API /rewards/my-status retorna
 interface RewardStatus {
@@ -88,12 +89,10 @@ const RewardsScreen = ({ navigation }: Props) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <Text style={styles.title}>Prémios Disponíveis</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.closeButton}>Voltar</Text>
-        </TouchableOpacity>
+        <Icon name="card-giftcard" size={30} color="#FFFFFF" />
+        <Text style={styles.headerText}>Prêmios</Text>
       </View>
       <FlatList
         data={rewards}
@@ -130,84 +129,91 @@ const RewardsScreen = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#0A0A2A',
-    },
-    centerContent: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    header: {
-        padding: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#1E1E3F',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#FFFFFF',
-    },
-    closeButton: {
-        fontSize: 16,
-        color: '#FDD835',
-        fontWeight: 'bold',
-    },
-    card: {
-        backgroundColor: '#1E1E3F',
-        borderRadius: 12,
-        padding: 20,
-        marginBottom: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    rewardName: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#FFFFFF',
-    },
-    rewardDescription: {
-        fontSize: 14,
-        color: '#B0B0B0',
-        marginTop: 4,
-    },
-    pointsContainer: {
-        alignItems: 'flex-end',
-    },
-    pointsRequired: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#FDD835',
-        marginBottom: 8,
-    },
-    redeemButton: {
-        backgroundColor: '#3D5CFF',
-        paddingVertical: 8,
-        paddingHorizontal: 15,
-        borderRadius: 8,
-    },
-    redeemButtonDisabled: {
-        backgroundColor: '#4A4A6A',
-    },
-    redeemButtonText: {
-        color: '#FFFFFF',
-        fontWeight: 'bold',
-    },
-    errorText: {
-        color: '#FF6B6B',
-        fontSize: 16,
-        textAlign: 'center',
-    },
-    emptyText: {
-        color: '#B0B0B0',
-        fontSize: 16,
-        marginTop: 50,
-    },
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#0A0A2A',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#1E1E3F',
+  },
+  headerText: {
+    marginLeft: 10,
+    fontSize: 20,
+    color: '#FFFFFF',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#0A0A2A',
+  },
+  centerContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  closeButton: {
+    fontSize: 16,
+    color: '#FDD835',
+    fontWeight: 'bold',
+  },
+  card: {
+    backgroundColor: '#1E1E3F',
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  rewardName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  rewardDescription: {
+    fontSize: 14,
+    color: '#B0B0B0',
+    marginTop: 4,
+  },
+  pointsContainer: {
+    alignItems: 'flex-end',
+  },
+  pointsRequired: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FDD835',
+    marginBottom: 8,
+  },
+  redeemButton: {
+    backgroundColor: '#3D5CFF',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+  },
+  redeemButtonDisabled: {
+    backgroundColor: '#4A4A6A',
+  },
+  redeemButtonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  errorText: {
+    color: '#FF6B6B',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  emptyText: {
+    color: '#B0B0B0',
+    fontSize: 16,
+    marginTop: 50,
+  },
 });
 
 export default RewardsScreen;

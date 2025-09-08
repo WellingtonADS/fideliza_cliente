@@ -82,8 +82,8 @@ android {
         applicationId "com.fideliza_cliente"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
     }
     signingConfigs {
         debug {
@@ -105,9 +105,19 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    sourceSets {
+        main {
+            assets.srcDirs += ['src/main/assets/fonts'] // Adiciona fontes para react-native-vector-icons
+        }
+    }
 }
 
 dependencies {
+    implementation("androidx.activity:activity:1.7.2")
+    implementation("androidx.fragment:fragment:1.5.7")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 

@@ -13,6 +13,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getCompanies } from '../services/api';
 import { CompanyDetails } from '../types/company';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 type Props = NativeStackScreenProps<MainStackParamList, 'Companies'>;
 
@@ -70,12 +71,10 @@ const CompaniesScreen = ({ navigation }: Props) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <Text style={styles.title}>Explorar Lojas</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.closeButton}>Voltar</Text>
-        </TouchableOpacity>
+        <Icon name="store" size={30} color="#FFFFFF" />
+        <Text style={styles.headerText}>Lojas</Text>
       </View>
       <FlatList
         data={companies}
@@ -93,6 +92,21 @@ const CompaniesScreen = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#0A0A2A',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#1E1E3F',
+  },
+  headerText: {
+    marginLeft: 10,
+    fontSize: 20,
+    color: '#FFFFFF',
+  },
   container: {
     flex: 1,
     backgroundColor: '#0A0A2A',
@@ -101,14 +115,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  header: {
-    padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#1E1E3F',
   },
   title: {
     fontSize: 24,

@@ -20,3 +20,13 @@ export interface DashboardData {
   last_activity: LastActivity | null;
   qr_code_base64: string | null;
 }
+
+// Adiciona a interface RewardStatus para corrigir o erro na tela de prêmios
+export interface RewardStatus {
+  id: number;
+  name: string;
+  description: string;
+  points_required: number;
+  redeemable: boolean;
+  points_to_redeem: number;
+}

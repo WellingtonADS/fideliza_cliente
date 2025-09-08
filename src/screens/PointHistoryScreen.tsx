@@ -12,6 +12,7 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getMyPointsByCompany } from '../services/api';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // Tipagem para os dados que a API retorna
 interface PointsByCompany {
@@ -63,12 +64,10 @@ const PointHistoryScreen = ({ navigation }: Props) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <Text style={styles.title}>Meu Extrato de Pontos</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.closeButton}>Voltar</Text>
-        </TouchableOpacity>
+        <Icon name="history" size={30} color="#FFFFFF" />
+        <Text style={styles.headerText}>Histórico de Pontos</Text>
       </View>
       <FlatList
         data={pointsData}
@@ -105,6 +104,10 @@ const PointHistoryScreen = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#0A0A2A',
+  },
   container: {
     flex: 1,
     backgroundColor: '#0A0A2A',
@@ -117,10 +120,13 @@ const styles = StyleSheet.create({
   header: {
     padding: 20,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#1E1E3F',
+    backgroundColor: '#1E1E3F',
+  },
+  headerText: {
+    marginLeft: 10,
+    fontSize: 20,
+    color: '#FFFFFF',
   },
   title: {
     fontSize: 24,
