@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IconComponent (semantic mapping) prioriza prop name sobre icon 1`] = `null`;
+
+exports[`IconComponent (semantic mapping) renderiza com chave semântica 1`] = `null`;
+
+exports[`IconComponent (semantic mapping) usa ícone fallback quando nenhum é informado 1`] = `null`;

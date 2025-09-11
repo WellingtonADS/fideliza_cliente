@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,190 +8,129 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getClientDashboard } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { DashboardData } from '../types/dashboard';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconComponent from '../components/IconComponent';
+import CustomHeader from '../components/CustomHeader';
 
-// CORREÇÃO: Alinhado o nome da rota para 'Home'
 type Props = NativeStackScreenProps<MainStackParamList, 'Home'>;
 
 const HomeScreen = ({ navigation }: Props) => {
-  // CORREÇÃO: Usar 'signOut' em vez de 'logout'
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      header: () => <CustomHeader title="Início" showBack={true} />,
+    });
+  }, [navigation]);
   const { user, signOut } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await getClientDashboard();
-        setData(response);
-      } catch (err) {
-        setError('Não foi possível carregar os dados do dashboard.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const renderContent = () => {
-    if (loading) {
-      return <ActivityIndicator size="large" color="#FFFFFF" />;
+  const load = async (isRefresh = false) => {
+    try {
+      if (isRefresh) setRefreshing(true); else setLoading(true);
+      setError(null);
+      const response = await getClientDashboard();
+      setData(response);
+    } catch (err) {
+      setError('Não foi possível carregar os dados do dashboard.');
+      console.error(err);
+    } finally {
+      if (isRefresh) setRefreshing(false); else setLoading(false);
     }
-
-    if (error || !data) {
-      return <Text style={styles.errorText}>{error || 'Dados não encontrados.'}</Text>;
-    }
-
-    // Substitua 'awarded_by' por uma propriedade existente, por exemplo 'company'
-    const ultimaLoja = data.last_activity?.company?.name ?? 'Nenhuma';
-
-    return (
-      <ScrollView>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Seu QR Code de Fidelidade</Text>
-          <View style={styles.qrCodeContainer}>
-            {data.qr_code_base64 ? (
-              <Image
-                style={styles.qrCodeImage}
-                source={{ uri: `data:image/png;base64,${data.qr_code_base64}` }}
-              />
-            ) : (
-              <View style={[styles.qrCodeImage, styles.qrCodePlaceholder]}>
-                <Text style={styles.qrCodePlaceholderText}>QR Code indisponível</Text>
-              </View>
-            )}
-          </View>
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Resumo de Pontos</Text>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Total de Pontos:</Text>
-            <Text style={styles.infoValue}>{data.total_points}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Última Loja Visitada:</Text>
-            <Text style={styles.infoValue}>{ultimaLoja}</Text>
-          </View>
-        </View>
-
-        {/* Secção de Botões de Navegação */}
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={() => navigation.navigate('PointHistory')}
-          >
-            <Text style={styles.buttonText}>Ver Extrato Completo</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={() => navigation.navigate('Companies')}
-          >
-            <Text style={styles.buttonText}>Explorar Lojas</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={() => navigation.navigate('Rewards')}
-          >
-            <Text style={styles.buttonText}>Ver Prémios e Recompensas</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={() => navigation.navigate('EditProfile')}
-          >
-            <Text style={styles.buttonText}>Editar Perfil</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    );
   };
+
+  useEffect(() => { load(); }, []);
+
+  const ultimaLoja = data?.last_activity?.company?.name || 'Nenhuma';
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <Icon name="home" size={30} color="#FFFFFF" />
-        <Text style={styles.headerText}>Início</Text>
+      <View style={styles.topBar}>
+        <View style={styles.topBarLeft}>
+          <IconComponent icon="home" size={24} color="#FFFFFF" />
+          <Text style={styles.topBarTitle}>Início</Text>
+        </View>
+        <TouchableOpacity style={styles.logoutButtonContainer} onPress={signOut}>
+          <Text style={styles.logoutButton}>Sair</Text>
+        </TouchableOpacity>
       </View>
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Olá, {user?.name || 'Cliente'}!</Text>
-          <TouchableOpacity onPress={signOut}>
-            <Text style={styles.logoutButton}>Sair</Text>
+
+      {loading && (
+        <View style={styles.centerArea}>
+          <ActivityIndicator size="large" color="#FFFFFF" />
+        </View>
+      )}
+
+      {!loading && error && (
+        <View style={styles.centerArea}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity style={[styles.button,{marginTop:16}]} onPress={() => load()}>
+            <Text style={styles.buttonText}>Tentar Novamente</Text>
           </TouchableOpacity>
         </View>
+      )}
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Seu QR Code de Fidelidade</Text>
-          <View style={styles.qrCodeContainer}>
-            {data?.qr_code_base64 ? (
-              <Image
-                style={styles.qrCodeImage}
-                source={{ uri: `data:image/png;base64,${data.qr_code_base64}` }}
-              />
-            ) : (
-              <View style={[styles.qrCodeImage, styles.qrCodePlaceholder]}>
-                <Text style={styles.qrCodePlaceholderText}>QR Code indisponível</Text>
+      {!loading && !error && (
+        <ScrollView
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => load(true)} tintColor="#fff" />}
+          contentContainerStyle={styles.contentContainer}
+        >
+          <View style={styles.greetingRow}>
+            <Text style={styles.title}>Olá, <Text style={styles.highlight}>{user?.name || 'Cliente'}</Text>!</Text>
+          </View>
+
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Seu QR Code de Fidelidade</Text>
+              <View style={styles.qrCodeContainer}>
+                {data?.qr_code_base64 ? (
+                  <Image
+                    style={styles.qrCodeImage}
+                    source={{ uri: `data:image/png;base64,${data.qr_code_base64}` }}
+                  />
+                ) : (
+                  <View style={[styles.qrCodeImage, styles.qrCodePlaceholder]}>
+                    <Text style={styles.qrCodePlaceholderText}>QR Code indisponível</Text>
+                  </View>
+                )}
               </View>
-            )}
-          </View>
-        </View>
+            </View>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Resumo de Pontos</Text>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Total de Pontos:</Text>
-            <Text style={styles.infoValue}>{data?.total_points || 0}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Última Loja Visitada:</Text>
-            <Text style={styles.infoValue}>{data?.last_activity?.company?.name || 'Nenhuma'}</Text>
-          </View>
-        </View>
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Resumo de Pontos</Text>
+              <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Total de Pontos:</Text>
+                <Text style={styles.infoValue}>{data?.total_points ?? 0}</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Última Loja Visitada:</Text>
+                <Text style={styles.infoValue}>{ultimaLoja}</Text>
+              </View>
+            </View>
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={() => navigation.navigate('PointHistory')}
-          >
-            <Text style={styles.buttonText}>Ver Extrato Completo</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={() => navigation.navigate('Companies')}
-          >
-            <Text style={styles.buttonText}>Explorar Lojas</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={() => navigation.navigate('Rewards')}
-          >
-            <Text style={styles.buttonText}>Ver Prémios e Recompensas</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={() => navigation.navigate('EditProfile')}
-          >
-            <Text style={styles.buttonText}>Editar Perfil</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+            <View style={styles.card}>
+              <Text style={[styles.cardTitle,{marginBottom:10}]}>Ações Rápidas</Text>
+              <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('PointHistory')}>
+                <Text style={styles.actionText}>Ver Extrato Completo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('Companies')}>
+                <Text style={styles.actionText}>Explorar Lojas</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('Rewards')}>
+                <Text style={styles.actionText}>Ver Prémios e Recompensas</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('EditProfile')}>
+                <Text style={styles.actionText}>Editar Perfil</Text>
+              </TouchableOpacity>
+            </View>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -202,16 +141,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0A0A2A',
   },
-  header: {
+  topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    height: 56,
     backgroundColor: '#1E1E3F',
   },
-  headerText: {
+  topBarLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  topBarTitle: {
     marginLeft: 10,
     fontSize: 20,
     color: '#FFFFFF',
+    fontWeight: '600'
+  },
+  logoutButtonContainer: {
+    padding: 4,
   },
   container: {
     flex: 1,
@@ -226,6 +175,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#FFFFFF',
   },
+  highlight: {
+    color: '#FFFFFF'
+  },
+  greetingRow: {
+    marginTop: 16,
+    marginBottom: 8,
+  },
   logoutButton: {
     fontSize: 16,
     color: '#FDD835',
@@ -235,6 +191,12 @@ const styles = StyleSheet.create({
     color: '#FF6B6B',
     fontSize: 16,
     textAlign: 'center',
+  },
+  centerArea: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
   },
   card: {
     backgroundColor: '#1E1E3F',
@@ -303,6 +265,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  actionButton: {
+    backgroundColor: '#3D5CFF',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  actionText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold'
+  }
 });
 
 export default HomeScreen;

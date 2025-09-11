@@ -14,12 +14,18 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import StyledTextInput from '../components/StyledTextInput';
 import { resetPassword } from '../services/api';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconComponent from '../components/IconComponent';
+import CustomHeader from '../components/CustomHeader';
 
 type ResetPasswordRouteProp = RouteProp<AuthStackParamList, 'ResetPassword'>;
 type Props = NativeStackScreenProps<AuthStackParamList, 'ResetPassword'>;
 
 const ResetPasswordScreen = ({ navigation }: Props) => {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      header: () => <CustomHeader title="Redefinir Senha" showBack={true} />,
+    });
+  }, [navigation]);
   const route = useRoute<ResetPasswordRouteProp>();
   const [token, setToken] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -60,8 +66,11 @@ const ResetPasswordScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <Icon name="lock" size={30} color="#FFFFFF" />
+  <IconComponent icon="resetPassword" size={26} color="#FFFFFF" />
         <Text style={styles.headerText}>Redefinir Senha</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Text style={styles.closeButton}>Voltar</Text>
+      </TouchableOpacity>
       </View>
       <View style={styles.content}>
         <StyledTextInput
@@ -100,6 +109,11 @@ const ResetPasswordScreen = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  closeButton: {
+    fontSize: 16,
+    color: '#FDD835',
+    fontWeight: 'bold',
+  },
   safeArea: {
     flex: 1,
     backgroundColor: '#0A0A2A',

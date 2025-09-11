@@ -81,6 +81,50 @@ O aplicativo será instalado e estará pronto para uso.
   - **styles/**: Estilos globais e temas.
   - **types/**: Definições de tipos TypeScript.
 
+## **🎨 Padrão de Ícones (Semantic Icon Mapping)**
+
+Para padronizar e facilitar a manutenção dos ícones foi adotado um mapeamento semântico centralizado:
+
+- Arquivo: `src/components/iconNames.ts`
+- Componente: `src/components/IconComponent.tsx`
+
+### Objetivos
+1. Permitir troca de biblioteca ou nomes de ícones em um único ponto.
+2. Garantir legibilidade do código usando chaves de domínio (`home`, `pointHistory`, `rewards`, etc.).
+3. Evitar espalhar strings mágicas pelos componentes/telas.
+
+### Uso Básico
+
+```tsx
+import Icon from '../components/IconComponent';
+
+// Usando chave semântica (preferencial)
+<Icon icon="home" size={28} color="#444" />
+
+// Usando nome direto da fonte (fallback)
+<Icon name="user" size={28} />
+
+// Com rótulo
+<Icon icon="rewards" label="Prêmios" />
+```
+
+### Adicionando um Novo Ícone
+1. Escolha um nome semântico coerente com o domínio (ex: `profile`, `settings`).
+2. No arquivo `iconNames.ts`, adicione a chave ao tipo `AppIconKey` e ao objeto `AppIcons` apontando para o nome FontAwesome.
+3. Use `<Icon icon="novaChave" />` nas telas.
+
+### Boas Práticas
+- Sempre prefira a prop `icon` (semântica) em vez de `name` (literal).
+- Evite reutilizar a mesma chave para múltiplos significados.
+- Se a biblioteca de ícones mudar, apenas atualize `AppIcons` (nenhuma tela precisa ser alterada).
+
+### Futuras Evoluções Possíveis
+- Criar pacote compartilhado entre apps (cliente / gestão) para reutilizar o mesmo mapping.
+- Adicionar testes de snapshot para garantir que novas alterações não quebrem o componente.
+- Suporte a temas alterando automaticamente a cor padrão.
+
+---
+
 ## **📄 Licença**
 
 Este projeto está licenciado sob a [MIT License](LICENSE).

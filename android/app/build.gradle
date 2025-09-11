@@ -90,8 +90,9 @@ android {
             storeFile file('debug.keystore')
             storePassword 'android'
             keyAlias 'androiddebugkey'
-            keyPassword 'android'
-        }
+        keyPassword 'android'
+    }
+
     }
     buildTypes {
         debug {
@@ -105,6 +106,8 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
     sourceSets {
         main {
             assets.srcDirs += ['src/main/assets/fonts'] // Adiciona fontes para react-native-vector-icons

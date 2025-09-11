@@ -12,7 +12,8 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getMyPointsByCompany } from '../services/api';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconComponent from '../components/IconComponent';
+import CustomHeader from '../components/CustomHeader';
 
 // Tipagem para os dados que a API retorna
 interface PointsByCompany {
@@ -28,6 +29,13 @@ type Props = NativeStackScreenProps<MainStackParamList, 'PointHistory'>;
 const PointHistoryScreen = ({ navigation }: Props) => {
   const [pointsData, setPointsData] = useState<PointsByCompany[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Adiciona o header customizado
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      header: () => <CustomHeader title="Histórico de Pontos" showBack={true} />,
+    });
+  }, [navigation]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -66,8 +74,11 @@ const PointHistoryScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <Icon name="history" size={30} color="#FFFFFF" />
+  <IconComponent icon="pointHistory" size={26} color="#FFFFFF" />
         <Text style={styles.headerText}>Histórico de Pontos</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Text style={styles.closeButton}>Voltar</Text>
+      </TouchableOpacity>
       </View>
       <FlatList
         data={pointsData}

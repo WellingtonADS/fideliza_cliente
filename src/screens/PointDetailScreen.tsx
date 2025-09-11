@@ -13,11 +13,19 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getPointTransactionsByCompany } from '../services/api';
 import { PointTransaction } from '../types/points';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconComponent from '../components/IconComponent';
+import CustomHeader from '../components/CustomHeader';
 
 type PointDetailScreenRouteProp = RouteProp<MainStackParamList, 'PointDetail'>;
 
-const PointDetailScreen = () => {
+type Props = { navigation: any };
+
+const PointDetailScreen = ({ navigation }: Props) => {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      header: () => <CustomHeader title="Detalhe de Pontos" showBack={true} />,
+    });
+  }, [navigation]);
   const route = useRoute<PointDetailScreenRouteProp>();
   const { companyId } = route.params;
 
@@ -84,10 +92,6 @@ const PointDetailScreen = () => {
 
   return (
     <View style={styles.safeArea}>
-      <View style={styles.header}>
-        <Icon name="receipt" size={30} color="#FFFFFF" />
-        <Text style={styles.headerText}>Detalhes dos Pontos</Text>
-      </View>
       <FlatList
         data={transactions}
         renderItem={renderItem}
@@ -112,6 +116,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     backgroundColor: '#1E1E3F',
+  },
+  closeButton: {
+    fontSize: 16,
+    color: '#FDD835',
+    fontWeight: 'bold',
   },
   headerText: {
     marginLeft: 10,
@@ -169,6 +178,8 @@ const styles = StyleSheet.create({
   emptyText: {
     color: '#6c757d',
   },
+
 });
 
 export default PointDetailScreen;
+

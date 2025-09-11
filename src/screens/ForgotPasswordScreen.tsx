@@ -13,11 +13,17 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import StyledTextInput from '../components/StyledTextInput';
 import { requestPasswordRecovery } from '../services/api';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconComponent from '../components/IconComponent';
+import CustomHeader from '../components/CustomHeader';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'ForgotPassword'>;
 
 const ForgotPasswordScreen = ({ navigation }: Props) => {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      header: () => <CustomHeader title="Recuperar Senha" showBack={true} />,
+    });
+  }, [navigation]);
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -53,8 +59,11 @@ const ForgotPasswordScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <Icon name="lock-reset" size={30} color="#FFFFFF" />
+  <IconComponent icon="recoverPassword" size={26} color="#FFFFFF" />
         <Text style={styles.headerText}>Recuperar Senha</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Text style={styles.closeButton}>Voltar</Text>
+      </TouchableOpacity>
       </View>
       <View style={styles.content}>
         <Text style={styles.title}>Recuperar Senha</Text>
@@ -88,6 +97,11 @@ const ForgotPasswordScreen = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  closeButton: {
+    fontSize: 16,
+    color: '#FDD835',
+    fontWeight: 'bold',
+  },
   safeArea: {
     flex: 1,
     backgroundColor: '#0A0A2A',

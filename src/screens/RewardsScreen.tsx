@@ -13,7 +13,8 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getMyRewardsStatus, redeemReward } from '../services/api';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconComponent from '../components/IconComponent';
+import CustomHeader from '../components/CustomHeader';
 
 // Tipagem para os dados que a API /rewards/my-status retorna
 interface RewardStatus {
@@ -28,6 +29,11 @@ interface RewardStatus {
 type Props = NativeStackScreenProps<MainStackParamList, 'Rewards'>;
 
 const RewardsScreen = ({ navigation }: Props) => {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      header: () => <CustomHeader title="Recompensas" showBack={true} />,
+    });
+  }, [navigation]);
   const [rewards, setRewards] = useState<RewardStatus[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -91,8 +97,11 @@ const RewardsScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <Icon name="card-giftcard" size={30} color="#FFFFFF" />
+  <IconComponent icon="rewards" size={26} color="#FFFFFF" />
         <Text style={styles.headerText}>Prêmios</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Text style={styles.closeButton}>Voltar</Text>
+      </TouchableOpacity>
       </View>
       <FlatList
         data={rewards}

@@ -13,11 +13,17 @@ import { useAuth } from '../context/AuthContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import StyledTextInput from '../components/StyledTextInput';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconComponent from '../components/IconComponent';
+import CustomHeader from '../components/CustomHeader';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
 const RegisterScreen = ({ navigation }: Props) => {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      header: () => <CustomHeader title="Cadastro" showBack={true} />,
+    });
+  }, [navigation]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -49,8 +55,11 @@ const RegisterScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <Icon name="person-add" size={30} color="#FFFFFF" />
+  <IconComponent icon="register" size={26} color="#FFFFFF" />
         <Text style={styles.headerText}>Registrar</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Text style={styles.closeButton}>Voltar</Text>
+      </TouchableOpacity>
       </View>
       <View style={styles.content}>
         <Text style={styles.title}>Inscreva-se</Text>
@@ -103,6 +112,11 @@ const RegisterScreen = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  closeButton: {
+    fontSize: 16,
+    color: '#FDD835',
+    fontWeight: 'bold',
+  },
   safeArea: {
     flex: 1,
     backgroundColor: '#0A0A2A',

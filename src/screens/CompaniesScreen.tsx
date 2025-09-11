@@ -13,11 +13,17 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getCompanies } from '../services/api';
 import { CompanyDetails } from '../types/company';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconComponent from '../components/IconComponent';
+import CustomHeader from '../components/CustomHeader';
 
 type Props = NativeStackScreenProps<MainStackParamList, 'Companies'>;
 
 const CompaniesScreen = ({ navigation }: Props) => {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      header: () => <CustomHeader title="Lojas" showBack={true} />,
+    });
+  }, [navigation]);
   const [companies, setCompanies] = useState<CompanyDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -73,8 +79,11 @@ const CompaniesScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <Icon name="store" size={30} color="#FFFFFF" />
+  <IconComponent icon="companies" size={26} color="#FFFFFF" />
         <Text style={styles.headerText}>Lojas</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Text style={styles.closeButton}>Voltar</Text>
+        </TouchableOpacity>
       </View>
       <FlatList
         data={companies}

@@ -14,7 +14,7 @@ import { useAuth } from '../context/AuthContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import StyledTextInput from '../components/StyledTextInput'; // Nosso novo componente
-import Icon from 'react-native-vector-icons/MaterialIcons';
+
 
 // Tipagem para as props de navegação
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
@@ -47,10 +47,6 @@ const LoginScreen = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <Icon name="login" size={30} color="#FFFFFF" />
-        <Text style={styles.headerText}>Login</Text>
-      </View>
       <View style={styles.content}>
         <Image source={require('../assets/images/logo_fideliza.png')} style={styles.logo} />
         <Text style={styles.title}>Fideliza+</Text>
@@ -116,9 +112,9 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   logo: {
-    width: 400,
-    height: 140,
-    marginBottom: 20,
+    width: 400, 
+    height: 140, 
+    resizeMode: 'contain',
   },
   title: {
     fontSize: 24,

@@ -14,6 +14,7 @@ import { MainStackParamList } from '../navigation/MainNavigator';
 import { useAuth } from '../context/AuthContext';
 import { updateMyProfile } from '../services/api';
 import StyledTextInput from '../components/StyledTextInput';
+import CustomHeader from '../components/CustomHeader';
 
 type Props = NativeStackScreenProps<MainStackParamList, 'EditProfile'>;
 
@@ -23,6 +24,13 @@ const EditProfileScreen = ({ navigation }: Props) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Adiciona o header customizado
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      header: () => <CustomHeader title="Editar Perfil" showBack={true} />,
+    });
+  }, [navigation]);
 
   const handleUpdate = async () => {
     if (password && password !== confirmPassword) {
