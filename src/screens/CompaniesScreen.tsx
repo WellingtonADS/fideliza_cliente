@@ -28,6 +28,8 @@ const CompaniesScreen = ({ navigation }: Props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  
+
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
@@ -79,10 +81,10 @@ const CompaniesScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-  <IconComponent icon="companies" size={26} color="#FFFFFF" />
+        <IconComponent icon="companies" size={26} color="#FFFFFF" />
         <Text style={styles.headerText}>Lojas</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={styles.closeButton}>Voltar</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
+          <Text style={styles.closeButton}>Voltar</Text>
         </TouchableOpacity>
       </View>
       <FlatList
@@ -108,8 +110,15 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     padding: 10,
     backgroundColor: '#1E1E3F',
+  },
+  goBackButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#8282a3ff',
+    borderRadius: 8,
   },
   headerText: {
     marginLeft: 10,

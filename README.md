@@ -32,42 +32,34 @@ O **Fideliza+** é uma solução completa para programas de fidelidade, permitin
 - **Gerenciamento de Estado:** Context API
 - **Comunicação com API:** Axios
 
-## **🚀 Configuração e Execução**
+## ⚡️ Build e Execução
 
-### **1. Pré-requisitos**
+### Instalação e Build
 
-- Ambiente de desenvolvimento React Native configurado (Node.js, JDK 17, Android Studio).
-- Backend do **Fideliza+** em execução. Consulte o repositório [fideliza_backend](https://github.com/wellingtonads/fideliza_backend).
+```bash
+# Instale dependências
+npm install
+# ou
+yarn install
 
-### **2. Configuração do Ambiente**
+# Execute em modo desenvolvimento (Android)
+npx react-native run-android
 
-1. Clone o repositório:
-   ```bash
-   git clone <URL_DO_REPOSITORIO>
-   cd fideliza_cliente
-   ```
+# Execute testes automatizados
+npm test
+```
 
-2. Instale as dependências:
-   ```bash
-   npm install
-   # ou
-   yarn install
-   ```
+### Ambiente
+- Node.js >= 18
+- JDK 17
+- Android Studio (emulador ou dispositivo físico)
+- Backend rodando (consulte [fideliza_backend](https://github.com/wellingtonads/fideliza_backend))
 
-3. Configure a URL da API:
-   - Edite o arquivo `src/services/api.ts` e atualize a constante `API_BASE_URL`:
-     - Emulador Android: `http://10.0.2.2:8000/api/v1`
-     - Dispositivo físico: `http://<SEU_IP_LOCAL>:8000/api/v1`
+### Testes
+- Para atualizar snapshots: `npm test -- -u` ou `npx jest --updateSnapshot`
+- Para limpar cache do Jest: `npm test -- --clearCache`
 
-### **3. Executar o Aplicativo**
-
-1. Inicie um emulador ou conecte um dispositivo físico.
-2. Execute o comando:
-   ```bash
-   npx react-native run-android
-   ```
-
-O aplicativo será instalado e estará pronto para uso.
+---
 
 ## **📄 Estrutura do Projeto**
 
@@ -125,6 +117,101 @@ import Icon from '../components/IconComponent';
 
 ---
 
-## **📄 Licença**
+## 🧩 Exemplos de Uso dos Componentes Semânticos
+
+### Card
+```tsx
+import Card from '../components/Card';
+<Card title="Prêmio" description="Vale R$ 50" icon="rewards" />
+```
+
+### ActionButton
+```tsx
+import ActionButton from '../components/ActionButton';
+<ActionButton label="Resgatar" onPress={handleRedeem} icon="rewards" />
+```
+
+### IconComponent
+```tsx
+import Icon from '../components/IconComponent';
+<Icon icon="home" size={28} color="#444" />
+```
+
+### CustomHeader
+```tsx
+import CustomHeader from '../components/CustomHeader';
+<CustomHeader title="Minha Conta" icon="profile" />
+```
+
+---
+
+## 🛠️ Como Adicionar Novos Ícones e Componentes
+
+### Novos Ícones
+1. Abra `src/components/iconNames.ts`.
+2. Adicione a chave ao tipo `AppIconKey` e ao objeto `AppIcons`:
+   ```ts
+   export type AppIconKey = 'home' | 'profile' | 'settings' | 'novoIcone';
+   export const AppIcons = {
+     home: 'home',
+     profile: 'user',
+     settings: 'cog',
+     novoIcone: 'star',
+   };
+   ```
+3. Use `<Icon icon="novoIcone" />` nos componentes/telas.
+
+### Novos Componentes
+1. Crie o componente em `src/components/NovoComponente.tsx`.
+2. Siga o padrão de props e documentação dos componentes existentes.
+3. Adicione exemplos de uso no README.md.
+4. Crie testes em `__tests__/NovoComponente.test.tsx`.
+
+---
+
+## 🎨 Refino Visual do README.md
+- Títulos claros e hierárquicos.
+- Listas e exemplos de código para facilitar onboarding.
+- Separação de seções por linhas `---`.
+- Links para documentação oficial e backend.
+- Exemplos reais de uso dos componentes.
+- Orientação para boas práticas e evolução futura.
+
+---
+
+## 📱 Responsividade e Adaptação de Telas
+
+Todos os componentes e telas principais utilizam `flex`, porcentagens (`width: '100%'`), e espaçamentos adaptativos para garantir boa experiência em celulares pequenos, médios e grandes.
+
+### Recomendações para Responsividade
+- Prefira `flex: 1`, `justifyContent`, `alignItems` e `paddingHorizontal` para layout adaptativo.
+- Use `Dimensions` ou `useWindowDimensions` para casos específicos (ex: imagens, QR Code, banners).
+- Evite valores fixos de largura/altura, exceto para ícones/imagens que exigem proporção.
+- Teste em emuladores e dispositivos reais de diferentes tamanhos.
+- Utilize `SafeAreaView` para evitar sobreposição com notch/barras do sistema.
+
+### Exemplos
+```tsx
+// Exemplo de container adaptativo
+<View style={{ flex: 1, paddingHorizontal: 20, justifyContent: 'center' }}>
+  <Card title="Exemplo" />
+</View>
+
+// Exemplo de imagem responsiva
+<Image style={{ width: '100%', height: 140, resizeMode: 'contain' }} source={...} />
+```
+
+### Componentes já preparados
+- Card, ActionButton, CustomHeader, IconComponent, StyledTextInput: todos usam `width: '100%'`, `flexDirection`, `alignItems` e espaçamentos flexíveis.
+- Telas principais (Login, Home, Register, Rewards, PointHistory, Companies): layout centralizado, listas com `FlatList` e containers flexíveis.
+
+### Como validar
+- Rode o app em diferentes emuladores (Pixel 4, Moto G, Galaxy S, iPhone SE, iPhone 13).
+- Ajuste o zoom/escala do emulador para simular telas pequenas e grandes.
+- Se necessário, ajuste valores de padding/margin/fontSize para melhor adaptação visual.
+
+---
+
+## 📄 Licença
 
 Este projeto está licenciado sob a [MIT License](LICENSE).

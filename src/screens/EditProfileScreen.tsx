@@ -22,7 +22,7 @@ const EditProfileScreen = ({ navigation }: Props) => {
   const { user, refreshUser } = useAuth(); // Usamos refreshUser para atualizar o contexto
   const [name, setName] = useState(user?.name || '');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');  
   const [loading, setLoading] = useState(false);
 
   // Adiciona o header customizado
@@ -71,7 +71,7 @@ const EditProfileScreen = ({ navigation }: Props) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Editar Perfil</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
             <Text style={styles.closeButton}>Voltar</Text>
         </TouchableOpacity>
       </View>
@@ -126,6 +126,12 @@ const styles = StyleSheet.create({
     color: '#FDD835',
     fontWeight: 'bold',
   },
+    goBackButton: {
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      backgroundColor: '#8282a3ff',
+      borderRadius: 8,
+    },
   content: {
     padding: 20,
   },

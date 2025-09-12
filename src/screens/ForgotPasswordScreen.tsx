@@ -59,11 +59,11 @@ const ForgotPasswordScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-  <IconComponent icon="recoverPassword" size={26} color="#FFFFFF" />
+        <IconComponent icon="recoverPassword" size={26} color="#FFFFFF" />
         <Text style={styles.headerText}>Recuperar Senha</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={styles.closeButton}>Voltar</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
+          <Text style={styles.closeButton}>Voltar</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.content}>
         <Text style={styles.title}>Recuperar Senha</Text>
@@ -109,9 +109,18 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     backgroundColor: '#1E1E3F',
+    justifyContent: 'space-between',
   },
+    goBackButton: {
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      backgroundColor: '#8282a3ff',
+      borderRadius: 8,
+      marginLeft: 16,
+    },
   headerText: {
     marginLeft: 10,
     fontSize: 20,
@@ -146,14 +155,15 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: 'bold',
   },
   footerText: {
-    marginTop: 30,
     color: '#FDD835',
+    fontSize: 16,
+    marginTop: 20,
+    textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 14,
   },
+  // goBackButton style removed (duplicate)
 });
 
 export default ForgotPasswordScreen;

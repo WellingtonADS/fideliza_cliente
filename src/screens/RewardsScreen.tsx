@@ -14,7 +14,10 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getMyRewardsStatus, redeemReward } from '../services/api';
 import IconComponent from '../components/IconComponent';
+import Toast from 'react-native-toast-message';
 import CustomHeader from '../components/CustomHeader';
+import Card from '../components/Card';
+import ActionButton from '../components/ActionButton';
 
 // Tipagem para os dados que a API /rewards/my-status retorna
 interface RewardStatus {
@@ -56,24 +59,34 @@ const RewardsScreen = ({ navigation }: Props) => {
   }, []);
 
   const handleRedeem = (reward: RewardStatus) => {
+    const redeem = async () => {
+      try {
+        setLoading(true);
+        await redeemReward(reward.id);
+        setLoading(false);
+        Toast.show({
+          type: 'success',
+          text1: 'Prêmio resgatado com sucesso!'
+        });
+        // Atualiza lista
+        fetchRewards();
+      } catch (error: any) {
+        setLoading(false);
+        const detail = error.response?.data?.detail || 'Não foi possível resgatar o prêmio.';
+        Toast.show({
+          type: 'error',
+          text1: 'Erro ao resgatar',
+          text2: detail
+        });
+      }
+    };
+
     Alert.alert(
       'Confirmar Resgate',
       `Tem a certeza de que deseja resgatar "${reward.name}" por ${reward.points_required} pontos?`,
       [
         { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Confirmar',
-          onPress: async () => {
-            try {
-              await redeemReward(reward.id);
-              Alert.alert('Sucesso!', 'Prémio resgatado com sucesso.');
-              fetchRewards(); // Atualiza a lista após o resgate
-            } catch (err: any) {
-              const detail = err.response?.data?.detail || 'Não foi possível resgatar o prémio.';
-              Alert.alert('Erro', detail);
-            }
-          },
-        },
+        { text: 'Resgatar', onPress: redeem }
       ]
     );
   };
@@ -97,34 +110,31 @@ const RewardsScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-  <IconComponent icon="rewards" size={26} color="#FFFFFF" />
+        <IconComponent icon="rewards" size={26} color="#FFFFFF" />
         <Text style={styles.headerText}>Prêmios</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={styles.closeButton}>Voltar</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
+          <Text style={styles.closeButton}>Voltar</Text>
+        </TouchableOpacity>
       </View>
       <FlatList
         data={rewards}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          <Card>
             <View>
               <Text style={styles.rewardName}>{item.name}</Text>
               <Text style={styles.rewardDescription}>{item.description}</Text>
             </View>
             <View style={styles.pointsContainer}>
               <Text style={styles.pointsRequired}>{item.points_required} pts</Text>
-              <TouchableOpacity
-                style={[styles.redeemButton, !item.redeemable && styles.redeemButtonDisabled]}
-                disabled={!item.redeemable}
+              <ActionButton
+                title={item.redeemable ? 'Resgatar' : `${item.points_to_redeem} pts restantes`}
                 onPress={() => handleRedeem(item)}
-              >
-                <Text style={styles.redeemButtonText}>
-                  {item.redeemable ? 'Resgatar' : `${item.points_to_redeem} pts restantes`}
-                </Text>
-              </TouchableOpacity>
+                style={item.redeemable ? styles.redeemButton : styles.redeemButtonDisabled}
+                textStyle={styles.redeemButtonText}
+              />
             </View>
-          </View>
+          </Card>
         )}
         ListEmptyComponent={
           <View style={styles.centerContent}>
@@ -145,9 +155,14 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     backgroundColor: '#1E1E3F',
+    justifyContent: 'space-between',
   },
+  // goBackButton: {
+  //   marginLeft: 16,
+  // },
   headerText: {
     marginLeft: 10,
     fontSize: 20,
@@ -160,12 +175,17 @@ const styles = StyleSheet.create({
   centerContent: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+  errorText: {
+    color: '#FF6B6B',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  goBackButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#8282a3ff',
+    borderRadius: 8,
   },
   closeButton: {
     fontSize: 16,
@@ -212,11 +232,6 @@ const styles = StyleSheet.create({
   redeemButtonText: {
     color: '#FFFFFF',
     fontWeight: 'bold',
-  },
-  errorText: {
-    color: '#FF6B6B',
-    fontSize: 16,
-    textAlign: 'center',
   },
   emptyText: {
     color: '#B0B0B0',

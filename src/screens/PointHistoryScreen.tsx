@@ -76,9 +76,9 @@ const PointHistoryScreen = ({ navigation }: Props) => {
       <View style={styles.header}>
   <IconComponent icon="pointHistory" size={26} color="#FFFFFF" />
         <Text style={styles.headerText}>Histórico de Pontos</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={styles.closeButton}>Voltar</Text>
-      </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
+            <Text style={styles.closeButton}>Voltar</Text>
+          </TouchableOpacity>
       </View>
       <FlatList
         data={pointsData}
@@ -129,11 +129,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
-    padding: 20,
+      paddingHorizontal: 20,
+      paddingVertical: 16,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#1E1E3F',
+      justifyContent: 'space-between',
   },
+    goBackButton: {
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      backgroundColor: '#8282a3ff',
+      borderRadius: 8,
+      marginLeft: 16,
+    },
   headerText: {
     marginLeft: 10,
     fontSize: 20,

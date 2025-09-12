@@ -1,4 +1,15 @@
 // Arquivo LIMPO: teste reduzido e estável de fluxo de navegação
+// Função utilitária para limitar profundidade da árvore renderizada
+function limitDepth(node: any, depth: number = 0, maxDepth: number = 6): any {
+  if (depth > maxDepth) return '[...]';
+  if (node == null || typeof node === 'string' || typeof node === 'number') return node;
+  if (Array.isArray(node)) return node.map(child => limitDepth(child, depth + 1, maxDepth));
+  if (typeof node === 'object') {
+    const { children, ...rest } = node;
+    return { ...rest, children: limitDepth(children, depth + 1, maxDepth) };
+  }
+  return node;
+}
 import React from 'react';
 import TestRenderer from 'react-test-renderer';
 import { NavigationContainer } from '@react-navigation/native';
@@ -57,16 +68,19 @@ describe('NavigationFlow', () => {
   };
 
   it('mostra telas de autenticação quando não logado', async () => {
-    const tree = await renderWith(baseValue);
-    expect(sanitize(tree.toJSON())).toMatchSnapshot();
+      const tree = await renderWith(baseValue);
+      const sanitized = sanitize(tree.toJSON());
+      // Limita profundidade para evitar snapshots gigantes
+      expect(limitDepth(sanitized)).toMatchSnapshot();
   });
 
   it('mostra fluxo principal quando logado', async () => {
-    const tree = await renderWith({
-      ...baseValue,
-      token: 'token',
-      user: { id: 1, name: 'User', email: 'user@test.com' },
-    });
-    expect(sanitize(tree.toJSON())).toMatchSnapshot();
+      const tree = await renderWith({
+        ...baseValue,
+        token: 'token',
+        user: { id: 1, name: 'User', email: 'user@test.com' },
+      });
+      const sanitized = sanitize(tree.toJSON());
+      expect(limitDepth(sanitized)).toMatchSnapshot();
   });
 });

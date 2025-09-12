@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import Toast from 'react-native-toast-message';
 import React from 'react';
 import { NavigationContainer,LinkingOptions } from '@react-navigation/native';
 import { AuthProvider } from './src/context/AuthContext';
@@ -21,7 +22,8 @@ const App = () => {
   return (
     <NavigationContainer linking={linking}>
       <AuthProvider>
-        <AppNavigator />
+  <AppNavigator />
+  <Toast />
       </AuthProvider>
     </NavigationContainer>
   );

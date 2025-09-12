@@ -66,11 +66,11 @@ const ResetPasswordScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-  <IconComponent icon="resetPassword" size={26} color="#FFFFFF" />
+        <IconComponent icon="resetPassword" size={26} color="#FFFFFF" />
         <Text style={styles.headerText}>Redefinir Senha</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={styles.closeButton}>Voltar</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
+          <Text style={styles.closeButton}>Voltar</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.content}>
         <StyledTextInput
@@ -121,14 +121,18 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     backgroundColor: '#1E1E3F',
+    justifyContent: 'space-between',
   },
-  headerText: {
-    marginLeft: 10,
-    fontSize: 20,
-    color: '#FFFFFF',
-  },
+    goBackButton: {
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      backgroundColor: '#8282a3ff',
+      borderRadius: 8,
+      marginLeft: 10,
+    },
   content: {
     flex: 1,
     justifyContent: 'center',
@@ -159,6 +163,13 @@ const styles = StyleSheet.create({
     color: '#FDD835',
     fontWeight: 'bold',
     fontSize: 14,
+  },
+  headerText: {
+    fontSize: 22,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    marginLeft: 12,
+    flex: 1,
   },
 });
 

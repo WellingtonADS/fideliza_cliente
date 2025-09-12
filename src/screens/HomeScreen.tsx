@@ -17,6 +17,8 @@ import { useAuth } from '../context/AuthContext';
 import { DashboardData } from '../types/dashboard';
 import IconComponent from '../components/IconComponent';
 import CustomHeader from '../components/CustomHeader';
+import Card from '../components/Card';
+import ActionButton from '../components/ActionButton';
 
 type Props = NativeStackScreenProps<MainStackParamList, 'Home'>;
 
@@ -57,9 +59,9 @@ const HomeScreen = ({ navigation }: Props) => {
           <IconComponent icon="home" size={24} color="#FFFFFF" />
           <Text style={styles.topBarTitle}>Início</Text>
         </View>
-        <TouchableOpacity style={styles.logoutButtonContainer} onPress={signOut}>
-          <Text style={styles.logoutButton}>Sair</Text>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.goBackButton} onPress={signOut}>
+              <Text style={styles.closeButton}>Sair</Text>
+            </TouchableOpacity>
       </View>
 
       {loading && (
@@ -86,7 +88,7 @@ const HomeScreen = ({ navigation }: Props) => {
             <Text style={styles.title}>Olá, <Text style={styles.highlight}>{user?.name || 'Cliente'}</Text>!</Text>
           </View>
 
-            <View style={styles.card}>
+            <Card>
               <Text style={styles.cardTitle}>Seu QR Code de Fidelidade</Text>
               <View style={styles.qrCodeContainer}>
                 {data?.qr_code_base64 ? (
@@ -100,9 +102,9 @@ const HomeScreen = ({ navigation }: Props) => {
                   </View>
                 )}
               </View>
-            </View>
+            </Card>
 
-            <View style={styles.card}>
+            <Card>
               <Text style={styles.cardTitle}>Resumo de Pontos</Text>
               <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Total de Pontos:</Text>
@@ -112,23 +114,15 @@ const HomeScreen = ({ navigation }: Props) => {
                 <Text style={styles.infoLabel}>Última Loja Visitada:</Text>
                 <Text style={styles.infoValue}>{ultimaLoja}</Text>
               </View>
-            </View>
+            </Card>
 
-            <View style={styles.card}>
+            <Card>
               <Text style={[styles.cardTitle,{marginBottom:10}]}>Ações Rápidas</Text>
-              <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('PointHistory')}>
-                <Text style={styles.actionText}>Ver Extrato Completo</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('Companies')}>
-                <Text style={styles.actionText}>Explorar Lojas</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('Rewards')}>
-                <Text style={styles.actionText}>Ver Prémios e Recompensas</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('EditProfile')}>
-                <Text style={styles.actionText}>Editar Perfil</Text>
-              </TouchableOpacity>
-            </View>
+              <ActionButton title="Ver Extrato Completo" onPress={() => navigation.navigate('PointHistory')} />
+              <ActionButton title="Explorar Lojas" onPress={() => navigation.navigate('Companies')} />
+              <ActionButton title="Ver Prémios e Recompensas" onPress={() => navigation.navigate('Rewards')} />
+              <ActionButton title="Editar Perfil" onPress={() => navigation.navigate('EditProfile')} />
+            </Card>
         </ScrollView>
       )}
     </SafeAreaView>
@@ -159,9 +153,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: '600'
   },
-  logoutButtonContainer: {
-    padding: 4,
-  },
   container: {
     flex: 1,
     backgroundColor: '#0A0A2A',
@@ -181,11 +172,6 @@ const styles = StyleSheet.create({
   greetingRow: {
     marginTop: 16,
     marginBottom: 8,
-  },
-  logoutButton: {
-    fontSize: 16,
-    color: '#FDD835',
-    fontWeight: 'bold',
   },
   errorText: {
     color: '#FF6B6B',
@@ -277,7 +263,20 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold'
-  }
+  },
+      goBackButton: {
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        backgroundColor: '#8282a3ff',
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      closeButton: {
+        fontSize: 16,
+        color: '#FDD835',
+        fontWeight: 'bold',
+      },
 });
 
 export default HomeScreen;
