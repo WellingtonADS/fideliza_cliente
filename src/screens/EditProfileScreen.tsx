@@ -86,13 +86,15 @@ const EditProfileScreen = ({ navigation }: Props) => {
           label="Nova Senha"
           value={password}
           onChangeText={setPassword}
-          secureTextEntry
+          isPassword
+          autoCapitalize="none"
         />
         <StyledTextInput
           label="Confirmar Nova Senha"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
-          secureTextEntry
+          isPassword
+          autoCapitalize="none"
         />
         <TouchableOpacity style={styles.button} onPress={handleUpdate} disabled={loading}>
           {loading ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.buttonText}>Salvar Alterações</Text>}

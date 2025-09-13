@@ -1,8 +1,9 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { User, UserCredentials, UserRegistration } from '../types/auth';
-import { login as apiLogin, registerClient, getMyProfile, setAuthToken } from '../services/api';
+import api, { login as apiLogin, registerClient, getMyProfile, setAuthToken } from '../services/api';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 interface AuthContextType {
   token: string | null;
@@ -41,6 +42,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
     loadTokenFromStorage();
   }, []);
+
+  
 
   const signIn = async (credentials: UserCredentials) => {
     try {
@@ -89,6 +92,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await signOut();
     }
   };
+
+  // Interceptor global para 401 -> sessão expirada (precisa de signOut definido)
+  useEffect(() => {
+    const interceptorId = api.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (axios.isAxiosError(error) && error.response) {
+          if (error.response.status === 401) {
+          // Evita disparar em endpoints de login
+          const url = error.config?.url || '';
+          if (!url.includes('/token')) {
+            Toast.show({ type: 'error', text1: 'Sessão expirada', text2: 'Faça login novamente.' });
+            await signOut();
+          }
+          } else if (error.response.status === 403) {
+            Toast.show({ type: 'error', text1: 'Acesso negado', text2: 'Você não tem permissão para esta ação.' });
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
+    return () => {
+      api.interceptors.response.eject(interceptorId);
+    };
+  }, [signOut]);
 
   return (
     <AuthContext.Provider value={{ token, user, isLoading, signIn, signUp, signOut, refreshUser }}>

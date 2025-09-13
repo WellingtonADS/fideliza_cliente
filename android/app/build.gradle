@@ -77,9 +77,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.fideliza"
+    namespace "com.fideliza_cliente"
     defaultConfig {
-        applicationId "com.fideliza"
+        applicationId "com.fideliza_cliente"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3
@@ -113,6 +113,26 @@ android {
             assets.srcDirs += ['src/main/assets/fonts'] // Adiciona fontes para react-native-vector-icons
         }
     }
+}
+
+// Workaround: garantir que o autolinking use o applicationId correto
+tasks.register("fixAutolinkingJson") {
+    doLast {
+        def f = file("${rootProject.projectDir}/build/generated/autolinking/autolinking.json")
+        if (f.exists()) {
+            def text = f.getText('UTF-8')
+            def fixed = text.replace('"applicationId": "com.fideliza"', '"applicationId": "com.fideliza_cliente"')
+                              .replace('"packageName": "com.fideliza"', '"packageName": "com.fideliza_cliente"')
+            if (fixed != text) {
+                f.write(fixed, 'UTF-8')
+                println("Patched autolinking.json to com.fideliza_cliente")
+            }
+        }
+    }
+}
+
+tasks.named("preBuild") {
+    dependsOn("fixAutolinkingJson")
 }
 
 dependencies {

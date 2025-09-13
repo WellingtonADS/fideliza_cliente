@@ -65,7 +65,8 @@ const LoginScreen = ({ navigation }: Props) => {
           placeholder="Digite sua senha"
           value={password}
           onChangeText={setPassword}
-          secureTextEntry
+          isPassword
+          autoCapitalize="none"
         />
 
         <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoading}>

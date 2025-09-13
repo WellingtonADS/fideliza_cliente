@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,8 @@ import {
   RefreshControl,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getClientDashboard } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -28,27 +30,45 @@ const HomeScreen = ({ navigation }: Props) => {
       header: () => <CustomHeader title="Início" showBack={true} />,
     });
   }, [navigation]);
-  const { user, signOut } = useAuth();
+  const { user, signOut, token, isLoading: isAuthLoading } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  const load = async (isRefresh = false) => {
+  const load = async (isRefresh = false, _retry = false) => {
     try {
       if (isRefresh) setRefreshing(true); else setLoading(true);
       setError(null);
       const response = await getClientDashboard();
       setData(response);
     } catch (err) {
+      // Se falha transitória (sem resposta ou 5xx/timeout), tenta uma vez automaticamente
+      const isAxiosErr = axios.isAxiosError(err);
+      const status = isAxiosErr ? err.response?.status : undefined;
+      const isTransient = !isAxiosErr || !err.response || (status && status >= 500);
+      if (!_retry && isTransient) {
+        // pequeno atraso para evitar bombardeio em cold start de infraestrutura
+        await new Promise(r => setTimeout(r, 800));
+        return load(isRefresh, true);
+      }
       setError('Não foi possível carregar os dados do dashboard.');
-      console.error(err);
+      console.error('Dashboard load error:', err);
     } finally {
       if (isRefresh) setRefreshing(false); else setLoading(false);
     }
   };
 
-  useEffect(() => { load(); }, []);
+  // Carrega quando a tela ganha foco e a autenticação está pronta
+  useFocusEffect(
+    useCallback(() => {
+      if (!isAuthLoading && token) {
+        load();
+      }
+      // Sem cleanup necessário
+      return () => {};
+    }, [isAuthLoading, token])
+  );
 
   const ultimaLoja = data?.last_activity?.company?.name || 'Nenhuma';
 

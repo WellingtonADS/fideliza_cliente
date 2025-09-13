@@ -11,6 +11,7 @@ O **Fideliza+** é uma solução completa para programas de fidelidade, permitin
 - **Autenticação Segura:**
   - Registro de novos clientes.
   - Login com suporte a tokens JWT.
+  - Tratamento global de sessão: 401 encerra sessão com aviso, 403 exibe mensagem de acesso negado.
 - **Painel do Cliente:**
   - Visualização de informações pessoais e QR Code único.
 - **Gestão de Pontos e Prêmios:**
@@ -22,6 +23,8 @@ O **Fideliza+** é uma solução completa para programas de fidelidade, permitin
   - Processo interativo e seguro para resgatar prêmios.
 - **Redefinição de Senha:**
   - Suporte a deep linking para redefinição de senha.
+ - **UX de Senha:**
+   - Exibir/ocultar senha nos campos de Login e Editar Perfil.
 
 ## **🛠️ Tecnologias Utilizadas**
 
@@ -33,6 +36,19 @@ O **Fideliza+** é uma solução completa para programas de fidelidade, permitin
 - **Comunicação com API:** Axios
 
 ## ⚡️ Build e Execução
+
+### Requisitos de Ambiente
+- Node.js >= 18
+- JDK 17
+- Android SDK/NDK (API 36)
+- Android Studio (emulador ou dispositivo físico)
+- Windows/WSL, macOS ou Linux
+
+Versões de build usadas neste projeto:
+- Gradle 8.13
+- Android Gradle Plugin (AGP) 8.6.1
+- Kotlin 1.9.24
+- React Native 0.81.x (Nova Arquitetura desativada por padrão)
 
 ### Instalação e Build
 
@@ -49,10 +65,10 @@ npx react-native run-android
 npm test
 ```
 
+No VS Code, você também pode usar a tarefa:
+- Terminal > Run Task > "Iniciar app no emulador Android"
+
 ### Ambiente
-- Node.js >= 18
-- JDK 17
-- Android Studio (emulador ou dispositivo físico)
 - Backend rodando (consulte [fideliza_backend](https://github.com/wellingtonads/fideliza_backend))
 
 ### Testes
@@ -60,6 +76,76 @@ npm test
 - Para limpar cache do Jest: `npm test -- --clearCache`
 
 ---
+
+## 📦 Geração de APK (Release)
+
+1) Gere o APK de release:
+
+Windows (PowerShell):
+```powershell
+cd android
+.\gradlew.bat assembleRelease
+```
+
+macOS/Linux:
+```bash
+cd android
+./gradlew assembleRelease
+```
+
+Saída esperada:
+- `android/app/build/outputs/apk/release/app-release.apk`
+
+2) Instale no dispositivo (USB ou emulador):
+
+Windows (PowerShell):
+```powershell
+adb install -r .\app\build\outputs\apk\release\app-release.apk
+```
+
+macOS/Linux:
+```bash
+adb install -r app/build/outputs/apk/release/app-release.apk
+```
+
+Notas importantes:
+- Nova Arquitetura (Turbo/Codegen) desativada (`newArchEnabled=false`) para estabilidade em release.
+- `applicationId`/`namespace`: `com.fideliza_cliente`.
+- Há um ajuste automatizado no build para garantir autolinking correto quando necessário.
+
+## 🛍️ Geração de AAB Assinado (Play Store)
+
+1) Gerar um keystore (uma vez):
+
+```bash
+keytool -genkey -v -keystore my-release-key.keystore -alias fideliza -keyalg RSA -keysize 2048 -validity 10000
+```
+
+2) Configure credenciais no `~/.gradle/gradle.properties` (ou `android/gradle.properties`):
+
+```
+MYAPP_UPLOAD_STORE_FILE=my-release-key.keystore
+MYAPP_UPLOAD_KEY_ALIAS=fideliza
+MYAPP_UPLOAD_STORE_PASSWORD=***
+MYAPP_UPLOAD_KEY_PASSWORD=***
+```
+
+3) Gere o AAB:
+
+Windows (PowerShell):
+```powershell
+cd android
+.\gradlew.bat bundleRelease
+```
+
+macOS/Linux:
+```bash
+cd android
+./gradlew bundleRelease
+```
+
+Saída esperada:
+- `android/app/build/outputs/bundle/release/app-release.aab`
 
 ## **📄 Estrutura do Projeto**
 
@@ -116,6 +202,24 @@ import Icon from '../components/IconComponent';
 - Suporte a temas alterando automaticamente a cor padrão.
 
 ---
+
+## 🔐 Autenticação e Interceptores
+
+- API (`src/services/api.ts`)
+  - `baseURL`: `https://fideliza-backend.onrender.com/api/v1` (ajuste conforme ambiente).
+  - Interceptor de requisição injeta token do `AsyncStorage` em `Authorization` no cold start.
+  - Interceptor de resposta:
+    - 401: exibe toast "Sessão expirada" + `signOut`.
+    - 403: exibe toast "Acesso negado" (sem sair da sessão).
+
+- Contexto (`src/context/AuthContext.tsx`)
+  - Carrega token, busca perfil e expõe `signIn`, `signOut`, `signUp`, `refreshUser`.
+
+- Dashboard (`src/screens/HomeScreen.tsx`)
+  - Carrega somente quando a autenticação está pronta e a tela está em foco; retry leve para falhas transitórias.
+
+- Senhas (`src/components/StyledTextInput.tsx`)
+  - Prop `isPassword` adiciona botão de exibir/ocultar; usado em Login e Editar Perfil.
 
 ## 🧩 Exemplos de Uso dos Componentes Semânticos
 
@@ -211,6 +315,18 @@ Todos os componentes e telas principais utilizam `flex`, porcentagens (`width: '
 - Se necessário, ajuste valores de padding/margin/fontSize para melhor adaptação visual.
 
 ---
+
+## 🧰 Troubleshooting (Android)
+
+- Erros de Gradle/Plugins:
+  - Projeto alinhado com Gradle 8.13 e AGP 8.6.1. Utilize JDK 17.
+- Dashboard não carrega no primeiro boot:
+  - Corrigido com gating de autenticação + interceptor de token. Verifique conectividade com o backend.
+- Warnings conhecidos no console:
+  - `Legacy Architecture`: esperado (Nova Arquitetura desativada por estabilidade).
+  - `SafeAreaView deprecated`: aviso não crítico do RN.
+- Logs úteis para debug:
+  - Filtre `ReactNativeJS`, `AndroidRuntime`, `401`, `403` no `adb logcat`.
 
 ## 📄 Licença
 

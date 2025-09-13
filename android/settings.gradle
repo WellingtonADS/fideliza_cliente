@@ -1,6 +1,25 @@
-pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
-plugins { id("com.facebook.react.settings") }
-extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
+pluginManagement {
+	repositories {
+		gradlePluginPortal()
+		mavenCentral()
+		google()
+	}
+	includeBuild("../node_modules/@react-native/gradle-plugin")
+}
+
+plugins {
+	id("com.facebook.react.settings")
+}
+
+// Configura o plugin de settings do React Native para autolink de bibliotecas
+extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
+	ex.autolinkLibrariesFromCommand()
+}
+
 rootProject.name = 'fideliza_cliente'
 include ':app'
-includeBuild('../node_modules/@react-native/gradle-plugin')
+
+// Opcional: configurar extensão do React (autolinking via comando)
+// extensions.configure(com.facebook.react.ReactSettingsExtension){ ex ->
+// 	ex.autolinkLibrariesFromCommand()
+// }

@@ -9,6 +9,22 @@ const api = axios.create({
   baseURL: 'https://fideliza-backend.onrender.com/api/v1',
 });
 
+// Garante que o token seja anexado mesmo em cold start
+api.interceptors.request.use(async (config) => {
+  try {
+    const hasAuth = config.headers && (config.headers as any)['Authorization'];
+    if (!hasAuth) {
+      const storedToken = await AsyncStorage.getItem('userToken');
+      if (storedToken) {
+        (config.headers as any)['Authorization'] = `Bearer ${storedToken}`;
+      }
+    }
+  } catch {
+    // ignora, segue sem token
+  }
+  return config;
+});
+
 export const setAuthToken = (token?: string) => {
   if (token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
