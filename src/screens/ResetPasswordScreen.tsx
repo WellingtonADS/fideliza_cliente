@@ -80,18 +80,18 @@ const ResetPasswordScreen = ({ navigation }: Props) => {
           onChangeText={setToken}
         />
         <StyledTextInput
-          label="Nova Senha"
-          placeholder="Digite a sua nova senha"
+          label="Nova senha"
+          placeholder="Digite a nova senha"
           value={newPassword}
           onChangeText={setNewPassword}
-          secureTextEntry
+          isPassword
         />
         <StyledTextInput
-          label="Confirmar Nova Senha"
-          placeholder="Digite a nova senha novamente"
+          label="Confirmar nova senha"
+          placeholder="Confirme a nova senha"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
-          secureTextEntry
+          isPassword
         />
         <TouchableOpacity style={styles.button} onPress={handleReset} disabled={isLoading}>
           {isLoading ? (

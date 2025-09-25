@@ -6,13 +6,12 @@ import { useAuth } from '../context/AuthContext';
 import AuthNavigator from './AuthNavigator';
 import MainNavigator from './MainNavigator'; 
 
+
 const AppNavigator = () => {
   const { token, isLoading } = useAuth();
 
-  // Mostra um indicador de loading enquanto o estado de autenticação é verificado
   if (isLoading) {
     return (
-      // CORREÇÃO: Adicionamos uma cor de fundo e um texto de feedback
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#FFFFFF" />
         <Text style={styles.loadingText}>A carregar...</Text>
@@ -20,7 +19,6 @@ const AppNavigator = () => {
     );
   }
 
-  // Se houver um token, mostra o MainNavigator; senão, o AuthNavigator.
   return token ? <MainNavigator /> : <AuthNavigator />;
 };
 

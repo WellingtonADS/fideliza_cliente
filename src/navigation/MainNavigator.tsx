@@ -6,6 +6,7 @@ import RewardsScreen from '../screens/RewardsScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import PointDetailScreen from '../screens/PointDetailScreen';
 import CompaniesScreen from '../screens/CompaniesScreen';
+import DeeplinkScreen from '../screens/DeeplinkScreen';
 
 // CORREÇÃO: Nomes das rotas padronizados para consistência
 export type MainStackParamList = {
@@ -15,6 +16,7 @@ export type MainStackParamList = {
   EditProfile: undefined;
   PointDetail: { companyId: number; companyName: string };
   Companies: undefined;
+  Deeplink: { info?: string } | undefined;
 };
 
 const MainStack = createNativeStackNavigator<MainStackParamList>();
@@ -28,6 +30,7 @@ const MainNavigator = () => {
       <MainStack.Screen name="EditProfile" component={EditProfileScreen} />
       <MainStack.Screen name="PointDetail" component={PointDetailScreen} />
       <MainStack.Screen name="Companies" component={CompaniesScreen} />
+      <MainStack.Screen name="Deeplink" component={DeeplinkScreen} />
     </MainStack.Navigator>
   );
 };
