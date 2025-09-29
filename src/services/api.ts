@@ -57,7 +57,8 @@ export const getClientDashboard = async (): Promise<DashboardData> => {
 };
 
 export const requestPasswordRecovery = (email: string) => {
-  return api.post('/request-password-recovery', { email });
+  // app_type 'client' garante que o e-mail contenha fidelizacliente://
+  return api.post('/request-password-recovery', { email, app_type: 'client' });
 };
 
 export const resetPassword = (token: string, new_password: string) => {

@@ -66,5 +66,15 @@
 		<string>Octicons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
+    <!-- Deep link scheme for iOS -->
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>fidelizacliente</string>
+        </array>
+      </dict>
+    </array>
 </dict>
 </plist>
