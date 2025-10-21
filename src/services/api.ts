@@ -1,12 +1,23 @@
 import axios from 'axios';
+import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserCredentials, UserRegistration } from '../types/auth';
 import { PointTransaction } from '../types/points';
 import { CompanyDetails } from '../types/company';
 import { DashboardData } from '../types/dashboard';
 
+// Define base URLs para ambiente local
+const LOCAL_BASE_URL = Platform.select({
+  android: 'http://10.0.2.2:8000/api/v1', // Emulador Android acessando host
+  ios: 'http://localhost:8000/api/v1',     // Simulador iOS
+  default: 'http://localhost:8000/api/v1', // Fallback
+});
+// Enquanto estivermos apenas em ambiente local, mantemos PROD apontando para LOCAL
+const PROD_BASE_URL = LOCAL_BASE_URL as string;
+
+// Usa sempre backend local (mesmo em release) para o cenário atual sem Render
 const api = axios.create({
-  baseURL: 'https://fideliza-backend.onrender.com/api/v1',
+  baseURL: __DEV__ ? LOCAL_BASE_URL : PROD_BASE_URL,
 });
 
 // Garante que o token seja anexado mesmo em cold start
@@ -25,12 +36,49 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
+// Trata respostas de erro para mensagens claras ao usuário
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const status = error?.response?.status as number | undefined;
+    const detail = error?.response?.data?.detail as string | undefined;
+
+    // Mapear status para mensagens amigáveis
+    let message: string | undefined;
+    if (status === 401) {
+      message = detail || 'Sessão expirada. Entre novamente.';
+      // Limpa token e segue para que a UI possa redirecionar para Login
+      await AsyncStorage.removeItem('userToken');
+      delete api.defaults.headers.common['Authorization'];
+    } else if (status === 403) {
+      message = detail || 'Acesso negado. Permissões insuficientes.';
+    } else if (status === 429) {
+      message = detail || 'Muitas requisições. Tente novamente em instantes.';
+    } else if (status && status >= 500) {
+      message = detail || 'Erro no servidor. Tente novamente mais tarde.';
+    }
+
+    if (message) {
+      // Evita dependências extras: delega para quem consome o serviço mostrar o toast/alert
+      // Encapsula a mensagem na própria instância de erro
+      error.userMessage = message;
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 export const setAuthToken = (token?: string) => {
   if (token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   } else {
     delete api.defaults.headers.common['Authorization'];
   }
+};
+
+// Permite ajustar dinamicamente a baseURL em tempo de execução, se necessário
+export const setBaseURL = (url: string) => {
+  api.defaults.baseURL = url;
 };
 
 export const login = (credentials: UserCredentials) => {

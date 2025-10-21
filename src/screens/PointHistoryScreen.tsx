@@ -7,13 +7,14 @@ import {
   SafeAreaView,
   FlatList,
   ActivityIndicator,
-  TouchableOpacity, // Importado e usado
+  TouchableOpacity,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getMyPointsByCompany } from '../services/api';
 import IconComponent from '../components/IconComponent';
-import CustomHeader from '../components/CustomHeader';
+import ThemedText from '../components/ThemedText';
+import { colors } from '../theme/colors';
 
 // Tipagem para os dados que a API retorna
 interface PointsByCompany {
@@ -30,12 +31,7 @@ const PointHistoryScreen = ({ navigation }: Props) => {
   const [pointsData, setPointsData] = useState<PointsByCompany[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Adiciona o header customizado
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      header: () => <CustomHeader title="Histórico de Pontos" showBack={true} />,
-    });
-  }, [navigation]);
+  // Header interno padronizado com TopBar
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -58,7 +54,7 @@ const PointHistoryScreen = ({ navigation }: Props) => {
   if (loading) {
     return (
       <View style={[styles.container, styles.centerContent]}>
-        <ActivityIndicator size="large" color="#FFFFFF" />
+  <ActivityIndicator size="large" color={colors.text} />
       </View>
     );
   }
@@ -66,20 +62,13 @@ const PointHistoryScreen = ({ navigation }: Props) => {
   if (error) {
     return (
       <View style={[styles.container, styles.centerContent]}>
-        <Text style={styles.errorText}>{error}</Text>
+  <ThemedText style={styles.errorText}>{error}</ThemedText>
       </View>
     );
   }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-  <IconComponent icon="pointHistory" size={26} color="#FFFFFF" />
-        <Text style={styles.headerText}>Histórico de Pontos</Text>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
-            <Text style={styles.closeButton}>Voltar</Text>
-          </TouchableOpacity>
-      </View>
       <FlatList
         data={pointsData}
         keyExtractor={(item) => item.company.id.toString()}
@@ -95,17 +84,16 @@ const PointHistoryScreen = ({ navigation }: Props) => {
               })
             }
           >
-            <Text style={styles.companyName}>{item.company.name}</Text>
-            <Text style={styles.pointsText}>
-              Saldo de Pontos:{' '}
-              <Text style={styles.pointsValue}>{item.total_points}</Text>
-            </Text>
+            <ThemedText style={styles.companyName}>{item.company.name}</ThemedText>
+            <ThemedText style={styles.pointsText}>
+              Saldo de pontos: <Text style={styles.pointsValue}>{item.total_points}</Text>
+            </ThemedText>
           </TouchableOpacity>
           // ------ FIM DA CORREÇÃO ------
         )}
         ListEmptyComponent={
           <View style={styles.centerContent}>
-            <Text style={styles.emptyText}>Você ainda não acumulou pontos.</Text>
+            <ThemedText style={styles.emptyText}>Você ainda não acumulou pontos.</ThemedText>
           </View>
         }
         contentContainerStyle={{ padding: 20 }}
@@ -117,49 +105,29 @@ const PointHistoryScreen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0A0A2A',
+    backgroundColor: colors.background,
   },
   container: {
     flex: 1,
-    backgroundColor: '#0A0A2A',
+    backgroundColor: colors.background,
   },
   centerContent: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  header: {
-      paddingHorizontal: 20,
-      paddingVertical: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#1E1E3F',
-      justifyContent: 'space-between',
-  },
-    goBackButton: {
-      paddingHorizontal: 12,
-      paddingVertical: 6,
-      backgroundColor: '#8282a3ff',
-      borderRadius: 8,
-      marginLeft: 16,
-    },
-  headerText: {
-    marginLeft: 10,
-    fontSize: 20,
-    color: '#FFFFFF',
-  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.text,
   },
   closeButton: {
     fontSize: 16,
-    color: '#FDD835',
+    color: colors.accent,
     fontWeight: 'bold',
   },
   card: {
-    backgroundColor: '#1E1E3F',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 20,
     marginBottom: 15,
@@ -167,24 +135,24 @@ const styles = StyleSheet.create({
   companyName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.text,
     marginBottom: 10,
   },
   pointsText: {
     fontSize: 16,
-    color: '#B0B0B0',
+    color: colors.textMuted,
   },
   pointsValue: {
     fontWeight: 'bold',
-    color: '#FDD835',
+    color: colors.accent,
   },
   errorText: {
-    color: '#FF6B6B',
+    color: colors.error,
     fontSize: 16,
     textAlign: 'center',
   },
   emptyText: {
-    color: '#B0B0B0',
+    color: colors.textMuted,
     fontSize: 16,
     marginTop: 50,
   },

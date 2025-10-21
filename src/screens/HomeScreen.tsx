@@ -18,18 +18,14 @@ import { getClientDashboard } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { DashboardData } from '../types/dashboard';
 import IconComponent from '../components/IconComponent';
-import CustomHeader from '../components/CustomHeader';
 import Card from '../components/Card';
 import ActionButton from '../components/ActionButton';
+import { colors } from '../theme/colors';
+import ThemedText from '../components/ThemedText';
 
 type Props = NativeStackScreenProps<MainStackParamList, 'Home'>;
 
 const HomeScreen = ({ navigation }: Props) => {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      header: () => <CustomHeader title="Início" showBack={true} />,
-    });
-  }, [navigation]);
   const { user, signOut, token, isLoading: isAuthLoading } = useAuth();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -72,17 +68,18 @@ const HomeScreen = ({ navigation }: Props) => {
 
   const ultimaLoja = data?.last_activity?.company?.name || 'Nenhuma';
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={signOut}>
+          <Text style={{ color: colors.accent, fontWeight: '700' }}>Sair</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, signOut]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.topBar}>
-        <View style={styles.topBarLeft}>
-          <IconComponent icon="home" size={24} color="#FFFFFF" />
-          <Text style={styles.topBarTitle}>Início</Text>
-        </View>
-            <TouchableOpacity style={styles.goBackButton} onPress={signOut}>
-              <Text style={styles.closeButton}>Sair</Text>
-            </TouchableOpacity>
-      </View>
 
       {loading && (
         <View style={styles.centerArea}>
@@ -94,7 +91,7 @@ const HomeScreen = ({ navigation }: Props) => {
         <View style={styles.centerArea}>
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity style={[styles.button,{marginTop:16}]} onPress={() => load()}>
-            <Text style={styles.buttonText}>Tentar Novamente</Text>
+            <ThemedText style={styles.buttonText}>Tentar Novamente</ThemedText>
           </TouchableOpacity>
         </View>
       )}
@@ -105,11 +102,11 @@ const HomeScreen = ({ navigation }: Props) => {
           contentContainerStyle={styles.contentContainer}
         >
           <View style={styles.greetingRow}>
-            <Text style={styles.title}>Olá, <Text style={styles.highlight}>{user?.name || 'Cliente'}</Text>!</Text>
+            <ThemedText variant="h1" style={styles.title}>Olá, <Text style={styles.highlight}>{user?.name || 'Cliente'}</Text>!</ThemedText>
           </View>
 
             <Card>
-              <Text style={styles.cardTitle}>Seu QR Code de Fidelidade</Text>
+              <ThemedText variant="h2" style={styles.cardTitle}>Seu QR Code de Fidelidade</ThemedText>
               <View style={styles.qrCodeContainer}>
                 {data?.qr_code_base64 ? (
                   <Image
@@ -125,14 +122,14 @@ const HomeScreen = ({ navigation }: Props) => {
             </Card>
 
             <Card>
-              <Text style={styles.cardTitle}>Resumo de Pontos</Text>
+              <ThemedText variant="h2" style={styles.cardTitle}>Resumo de Pontos</ThemedText>
               <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Total de Pontos:</Text>
                 <Text style={styles.infoValue}>{data?.total_points ?? 0}</Text>
               </View>
               <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Última Loja Visitada:</Text>
-                <Text style={styles.infoValue}>{ultimaLoja}</Text>
+                <ThemedText style={styles.infoLabel}>Última loja visitada:</ThemedText>
+                <ThemedText style={styles.infoValue}>{ultimaLoja}</ThemedText>
               </View>
             </Card>
 
@@ -140,7 +137,7 @@ const HomeScreen = ({ navigation }: Props) => {
               <Text style={[styles.cardTitle,{marginBottom:10}]}>Ações Rápidas</Text>
               <ActionButton title="Ver Extrato Completo" onPress={() => navigation.navigate('PointHistory')} />
               <ActionButton title="Explorar Lojas" onPress={() => navigation.navigate('Companies')} />
-              <ActionButton title="Ver Prémios e Recompensas" onPress={() => navigation.navigate('Rewards')} />
+              <ActionButton title="Ver prêmios e recompensas" onPress={() => navigation.navigate('Rewards')} />
               <ActionButton title="Editar Perfil" onPress={() => navigation.navigate('EditProfile')} />
             </Card>
         </ScrollView>
@@ -153,29 +150,11 @@ const HomeScreen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0A0A2A',
-  },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    height: 56,
-    backgroundColor: '#1E1E3F',
-  },
-  topBarLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  topBarTitle: {
-    marginLeft: 10,
-    fontSize: 20,
-    color: '#FFFFFF',
-    fontWeight: '600'
+    backgroundColor: colors.background,
   },
   container: {
     flex: 1,
-    backgroundColor: '#0A0A2A',
+    backgroundColor: colors.background,
   },
   contentContainer: {
     paddingHorizontal: 20,
@@ -184,17 +163,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.text,
   },
   highlight: {
-    color: '#FFFFFF'
+    color: colors.text
   },
   greetingRow: {
     marginTop: 16,
     marginBottom: 8,
   },
   errorText: {
-    color: '#FF6B6B',
+    color: colors.error,
     fontSize: 16,
     textAlign: 'center',
   },
@@ -205,7 +184,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   card: {
-    backgroundColor: '#1E1E3F',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 20,
     width: '100%',
@@ -219,7 +198,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.text,
     marginBottom: 15,
     textAlign: 'center',
   },
@@ -229,7 +208,7 @@ const styles = StyleSheet.create({
   qrCodeImage: {
     width: 200,
     height: 200,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.text,
     borderRadius: 8,
   },
   qrCodePlaceholder: {
@@ -237,7 +216,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   qrCodePlaceholderText: {
-    color: '#B0B0B0',
+    color: colors.textMuted,
     textAlign: 'center',
   },
   infoRow: {
@@ -247,12 +226,12 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 16,
-    color: '#B0B0B0',
+    color: colors.textMuted,
   },
   infoValue: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.text,
   },
   buttonContainer: {
     width: '100%',
@@ -262,17 +241,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingVertical: 12,
     paddingHorizontal: 15,
-    backgroundColor: '#3D5CFF',
+    backgroundColor: colors.primary,
     borderRadius: 8,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 16,
     fontWeight: 'bold',
   },
   actionButton: {
-    backgroundColor: '#3D5CFF',
+    backgroundColor: colors.primary,
     paddingVertical: 12,
     paddingHorizontal: 15,
     borderRadius: 8,
@@ -280,23 +259,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   actionText: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 16,
     fontWeight: 'bold'
   },
-      goBackButton: {
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        backgroundColor: '#8282a3ff',
-        borderRadius: 8,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      closeButton: {
-        fontSize: 16,
-        color: '#FDD835',
-        fontWeight: 'bold',
-      },
 });
 
 export default HomeScreen;

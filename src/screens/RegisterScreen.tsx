@@ -14,16 +14,13 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import StyledTextInput from '../components/StyledTextInput';
 import IconComponent from '../components/IconComponent';
-import CustomHeader from '../components/CustomHeader';
+import ThemedText from '../components/ThemedText';
+import { colors } from '../theme/colors';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
 const RegisterScreen = ({ navigation }: Props) => {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      header: () => <CustomHeader title="Cadastro" showBack={true} />,
-    });
-  }, [navigation]);
+  // Removido header custom para evitar duplicidade; usamos TopBar interna
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -46,7 +43,7 @@ const RegisterScreen = ({ navigation }: Props) => {
       // O AppNavigator irá redirecionar automaticamente para a HomePage
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.';
-      Alert.alert('Erro no Registo', errorMessage);
+      Alert.alert('Erro no Registro', errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -54,16 +51,9 @@ const RegisterScreen = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <IconComponent icon="register" size={26} color="#FFFFFF" />
-        <Text style={styles.headerText}>Registrar</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
-          <Text style={styles.closeButton}>Voltar</Text>
-        </TouchableOpacity>
-      </View>
       <View style={styles.content}>
-        <Text style={styles.title}>Inscreva-se</Text>
-        <Text style={styles.subtitle}>Entre com e-mail e senha:</Text>
+        <ThemedText variant="h1" style={styles.title}>Inscreva-se</ThemedText>
+        <ThemedText style={styles.subtitle}>Entre com e-mail e senha:</ThemedText>
 
         <StyledTextInput
           label="Nome Completo"
@@ -97,14 +87,14 @@ const RegisterScreen = ({ navigation }: Props) => {
 
         <TouchableOpacity style={styles.button} onPress={handleRegister} disabled={isLoading}>
           {isLoading ? (
-            <ActivityIndicator color="#FFFFFF" />
+            <ActivityIndicator color={colors.text} />
           ) : (
-            <Text style={styles.buttonText}>Cadastrar</Text>
+            <ThemedText style={styles.buttonText}>Cadastrar</ThemedText>
           )}
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.footerText}>Já tem conta? <Text style={styles.link}>Clique Aqui.</Text></Text>
+          <ThemedText style={styles.footerText}>Já tem conta? <Text style={styles.link}>Clique Aqui.</Text></ThemedText>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -114,32 +104,32 @@ const RegisterScreen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   closeButton: {
     fontSize: 16,
-    color: '#FDD835',
+    color: colors.accent,
     fontWeight: 'bold',
   },
   safeArea: {
     flex: 1,
-    backgroundColor: '#0A0A2A',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#1E1E3F',
+    backgroundColor: colors.surface,
     justifyContent: 'space-between',
   },
   goBackButton: {
     marginLeft: 16,
     paddingHorizontal: 12,
     paddingVertical: 6,
-    backgroundColor: '#8282a3ff',
+    backgroundColor: colors.primaryDark,
     borderRadius: 8,
   },
   headerText: {
     marginLeft: 10,
     fontSize: 20,
-    color: '#FFFFFF',
+    color: colors.text,
   },
   content: {
     flex: 1,
@@ -150,16 +140,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.text,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#B0B0B0',
+    color: colors.textMuted,
     marginBottom: 30,
   },
   button: {
-    backgroundColor: '#3D5CFF',
+    backgroundColor: colors.primary,
     width: '100%',
     padding: 15,
     borderRadius: 12,
@@ -167,17 +157,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 18,
     fontWeight: 'bold',
   },
   footerText: {
     marginTop: 30,
-    color: '#B0B0B0',
+    color: colors.textMuted,
     fontSize: 14,
   },
   link: {
-    color: '#FDD835',
+    color: colors.accent,
     fontWeight: 'bold',
   },
 });

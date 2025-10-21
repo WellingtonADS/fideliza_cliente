@@ -15,17 +15,14 @@ import { AuthStackParamList } from '../navigation/AuthNavigator';
 import StyledTextInput from '../components/StyledTextInput';
 import { resetPassword } from '../services/api';
 import IconComponent from '../components/IconComponent';
-import CustomHeader from '../components/CustomHeader';
+import ThemedText from '../components/ThemedText';
+import { colors } from '../theme/colors';
 
 type ResetPasswordRouteProp = RouteProp<AuthStackParamList, 'ResetPassword'>;
 type Props = NativeStackScreenProps<AuthStackParamList, 'ResetPassword'>;
 
 const ResetPasswordScreen = ({ navigation }: Props) => {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      header: () => <CustomHeader title="Redefinir Senha" showBack={true} />,
-    });
-  }, [navigation]);
+  // Removemos o header custom para evitar duplicidade; usamos top bar interna padronizada
   const route = useRoute<ResetPasswordRouteProp>();
   const [token, setToken] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -52,7 +49,7 @@ const ResetPasswordScreen = ({ navigation }: Props) => {
       await resetPassword(token, newPassword);
       Alert.alert(
         'Sucesso',
-        'A sua senha foi redefinida com sucesso. Por favor, faça o login.',
+        'Sua senha foi redefinida com sucesso. Por favor, faça login.',
         [{ text: 'OK', onPress: () => navigation.navigate('Login') }]
       );
     } catch (error: any) {
@@ -65,16 +62,9 @@ const ResetPasswordScreen = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <IconComponent icon="resetPassword" size={26} color="#FFFFFF" />
-        <Text style={styles.headerText}>Redefinir Senha</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
-          <Text style={styles.closeButton}>Voltar</Text>
-        </TouchableOpacity>
-      </View>
       <View style={styles.content}>
         <StyledTextInput
-          label="Token de Recuperação"
+          label="Token de recuperação"
           placeholder="Cole o token do seu e-mail"
           value={token}
           onChangeText={setToken}
@@ -95,13 +85,13 @@ const ResetPasswordScreen = ({ navigation }: Props) => {
         />
         <TouchableOpacity style={styles.button} onPress={handleReset} disabled={isLoading}>
           {isLoading ? (
-            <ActivityIndicator color="#FFFFFF" />
+            <ActivityIndicator color={colors.text} />
           ) : (
-            <Text style={styles.buttonText}>Redefinir Senha</Text>
+            <ThemedText style={styles.buttonText}>Redefinir Senha</ThemedText>
           )}
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.footerText}>Voltar para o Login</Text>
+          <ThemedText style={styles.footerText}>Voltar para o Login</ThemedText>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -111,25 +101,25 @@ const ResetPasswordScreen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   closeButton: {
     fontSize: 16,
-    color: '#FDD835',
+    color: colors.accent,
     fontWeight: 'bold',
   },
   safeArea: {
     flex: 1,
-    backgroundColor: '#0A0A2A',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#1E1E3F',
+    backgroundColor: colors.surface,
     justifyContent: 'space-between',
   },
     goBackButton: {
       paddingHorizontal: 12,
       paddingVertical: 6,
-      backgroundColor: '#8282a3ff',
+      backgroundColor: colors.primaryDark,
       borderRadius: 8,
       marginLeft: 10,
     },
@@ -137,16 +127,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 30,
+    padding: 24,
+    paddingTop: 16,
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.text,
     marginBottom: 30,
   },
   button: {
-    backgroundColor: '#3D5CFF',
+    backgroundColor: colors.primary,
     width: '100%',
     padding: 15,
     borderRadius: 12,
@@ -154,19 +145,19 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 18,
     fontWeight: 'bold',
   },
   footerText: {
     marginTop: 30,
-    color: '#FDD835',
+    color: colors.accent,
     fontWeight: 'bold',
     fontSize: 14,
   },
   headerText: {
     fontSize: 22,
-    color: '#FFFFFF',
+    color: colors.text,
     fontWeight: 'bold',
     marginLeft: 12,
     flex: 1,

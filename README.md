@@ -1,12 +1,12 @@
-# **Fideliza+ - Aplicação Cliente (React Native)**
+# Fideliza+ - Aplicação Cliente (React Native)
 
 Bem-vindo ao repositório oficial da aplicação cliente do sistema **Fideliza+**. Este aplicativo foi desenvolvido para oferecer uma experiência intuitiva e eficiente para os clientes gerenciarem seus programas de fidelidade.
 
-## **📋 Visão Geral**
+## 📋 Visão Geral
 
 O **Fideliza+** é uma solução completa para programas de fidelidade, permitindo que empresas recompensem seus clientes de forma prática e personalizada. Este aplicativo móvel é a interface principal para os clientes acessarem suas informações de pontos, prêmios e muito mais.
 
-## **✨ Funcionalidades Principais**
+## ✨ Funcionalidades Principais
 
 - **Autenticação Segura:**
   - Registro de novos clientes.
@@ -23,10 +23,12 @@ O **Fideliza+** é uma solução completa para programas de fidelidade, permitin
   - Processo interativo e seguro para resgatar prêmios.
 - **Redefinição de Senha:**
   - Suporte a deep linking para redefinição de senha.
- - **UX de Senha:**
-   - Exibir/ocultar senha nos campos de Login e Editar Perfil.
+- **UX de Senha:**
+  - Exibir/ocultar senha nos campos de Login e Editar Perfil.
+- **Header nativo padrão:**
+  - Header do React Navigation ativado por padrão em todas as telas, exceto Login (oculto para layout full-screen).
 
-## **🛠️ Tecnologias Utilizadas**
+## 🛠️ Tecnologias Utilizadas
 
 - **Framework:** [React Native](https://reactnative.dev/)
 - **Linguagem:** [TypeScript](https://www.typescriptlang.org/)
@@ -35,7 +37,7 @@ O **Fideliza+** é uma solução completa para programas de fidelidade, permitin
 - **Gerenciamento de Estado:** Context API
 - **Comunicação com API:** Axios
 
-## ⚡️ Build e Execução
+## ⚡️ Build e Execução (100% local)
 
 ### Requisitos de Ambiente
 - Node.js >= 18
@@ -69,7 +71,8 @@ No VS Code, você também pode usar a tarefa:
 - Terminal > Run Task > "Iniciar app no emulador Android"
 
 ### Ambiente
-- Backend rodando (consulte [fideliza_backend](https://github.com/wellingtonads/fideliza_backend))
+- Backend local: http://127.0.0.1:8000
+- Emulador Android acessa o host local via `http://10.0.2.2:8000/api/v1`
 
 ### Testes
 - Para atualizar snapshots: `npm test -- -u` ou `npx jest --updateSnapshot`
@@ -147,7 +150,7 @@ cd android
 Saída esperada:
 - `android/app/build/outputs/bundle/release/app-release.aab`
 
-## **📄 Estrutura do Projeto**
+## 📄 Estrutura do Projeto
 
 - **src/**: Contém todo o código-fonte do aplicativo.
   - **assets/**: Recursos estáticos como imagens e fontes.
@@ -159,7 +162,7 @@ Saída esperada:
   - **styles/**: Estilos globais e temas.
   - **types/**: Definições de tipos TypeScript.
 
-## **🎨 Padrão de Ícones (Semantic Icon Mapping)**
+## 🎨 Padrão de Ícones (Semantic Icon Mapping)
 
 Para padronizar e facilitar a manutenção dos ícones foi adotado um mapeamento semântico centralizado:
 
@@ -203,14 +206,17 @@ import Icon from '../components/IconComponent';
 
 ---
 
-## 🔐 Autenticação e Interceptores
+## 🔐 Autenticação, Interceptores e Senhas
 
 - API (`src/services/api.ts`)
-  - `baseURL`: `https://fideliza-backend.onrender.com/api/v1` (ajuste conforme ambiente).
+  - `baseURL`: `http://10.0.2.2:8000/api/v1` (Android emulador) | `http://localhost:8000/api/v1` (iOS/sim)
   - Interceptor de requisição injeta token do `AsyncStorage` em `Authorization` no cold start.
   - Interceptor de resposta:
     - 401: exibe toast "Sessão expirada" + `signOut`.
     - 403: exibe toast "Acesso negado" (sem sair da sessão).
+  - Endpoints de senha:
+    - Recuperação: `POST /request-password-recovery` (app_type='cliente')
+    - Redefinição: `POST /reset-password` ({ token, new_password })
 
 - Contexto (`src/context/AuthContext.tsx`)
   - Carrega token, busca perfil e expõe `signIn`, `signOut`, `signUp`, `refreshUser`.

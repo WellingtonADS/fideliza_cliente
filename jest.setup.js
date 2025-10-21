@@ -29,3 +29,7 @@ console.warn = (...args) => {
   if (typeof msg === 'string' && msg.includes('deprecated')) return;
   originalWarn(...args);
 };
+
+// Aumenta timeout padrão dos testes e usa fake timers para evitar teardown tardio
+jest.setTimeout(20000);
+jest.useFakeTimers();

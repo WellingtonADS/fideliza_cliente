@@ -7,23 +7,18 @@ import {
   FlatList,
   ActivityIndicator,
   Image,
-  TouchableOpacity,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getCompanies } from '../services/api';
 import { CompanyDetails } from '../types/company';
-import IconComponent from '../components/IconComponent';
-import CustomHeader from '../components/CustomHeader';
+import ThemedText from '../components/ThemedText';
+import { colors } from '../theme/colors';
 
 type Props = NativeStackScreenProps<MainStackParamList, 'Companies'>;
 
 const CompaniesScreen = ({ navigation }: Props) => {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      header: () => <CustomHeader title="Lojas" showBack={true} />,
-    });
-  }, [navigation]);
+  // Removemos header duplicado e usamos top bar própria da tela
   const [companies, setCompanies] = useState<CompanyDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +60,7 @@ const CompaniesScreen = ({ navigation }: Props) => {
   if (loading) {
     return (
       <View style={[styles.container, styles.centerContent]}>
-        <ActivityIndicator size="large" color="#FFFFFF" />
+        <ActivityIndicator size="large" color={colors.text} />
       </View>
     );
   }
@@ -73,20 +68,14 @@ const CompaniesScreen = ({ navigation }: Props) => {
   if (error) {
     return (
       <View style={[styles.container, styles.centerContent]}>
-        <Text style={styles.errorText}>{error}</Text>
+        <ThemedText style={styles.errorText}>{error}</ThemedText>
       </View>
     );
   }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <IconComponent icon="companies" size={26} color="#FFFFFF" />
-        <Text style={styles.headerText}>Lojas</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
-          <Text style={styles.closeButton}>Voltar</Text>
-        </TouchableOpacity>
-      </View>
+      {/* header nativo do Navigator em uso */}
       <FlatList
         data={companies}
         keyExtractor={(item) => item.id.toString()}
@@ -105,29 +94,23 @@ const CompaniesScreen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0A0A2A',
+    backgroundColor: colors.background,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 10,
-    backgroundColor: '#1E1E3F',
-  },
+  // estilos do header interno removidos
   goBackButton: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    backgroundColor: '#8282a3ff',
+    backgroundColor: colors.primaryDark,
     borderRadius: 8,
   },
   headerText: {
     marginLeft: 10,
     fontSize: 20,
-    color: '#FFFFFF',
+    color: colors.text,
   },
   container: {
     flex: 1,
-    backgroundColor: '#0A0A2A',
+    backgroundColor: colors.background,
   },
   centerContent: {
     flex: 1,
@@ -137,18 +120,18 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.text,
   },
   closeButton: {
     fontSize: 16,
-    color: '#FDD835',
+    color: colors.accent,
     fontWeight: 'bold',
   },
   listContainer: {
     padding: 20,
   },
   card: {
-    backgroundColor: '#1E1E3F',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     marginBottom: 20,
     flexDirection: 'row',
@@ -164,7 +147,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 10,
     marginRight: 15,
-    backgroundColor: '#4A4A6A', // Cor de fundo para o placeholder
+    backgroundColor: colors.border, // Cor de fundo para o placeholder
   },
   cardInfo: {
     flex: 1,
@@ -173,26 +156,26 @@ const styles = StyleSheet.create({
   companyName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.text,
     marginBottom: 5,
   },
   companyCategory: {
     fontSize: 14,
-    color: '#FDD835',
+    color: colors.accent,
     marginBottom: 5,
     fontWeight: '600',
   },
   companyAddress: {
     fontSize: 14,
-    color: '#B0B0B0',
+    color: colors.textMuted,
   },
   errorText: {
-    color: '#FF6B6B',
+    color: colors.error,
     fontSize: 16,
     textAlign: 'center',
   },
   emptyText: {
-    color: '#B0B0B0',
+    color: colors.textMuted,
     fontSize: 16,
     marginTop: 50,
   },

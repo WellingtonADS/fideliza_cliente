@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { colors } from '../theme/colors';
 
 interface ActionButtonProps {
   title: string;
@@ -16,7 +17,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({ title, onPress, style, text
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#3D5CFF',
+    backgroundColor: colors.primary,
     paddingVertical: 12,
     paddingHorizontal: 15,
     borderRadius: 8,
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   text: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 16,
     fontWeight: 'bold',
   },

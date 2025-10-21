@@ -25,13 +25,8 @@ const EditProfileScreen = ({ navigation }: Props) => {
     const [confirmPassword, setConfirmPassword] = useState('');  
   const [loading, setLoading] = useState(false);
 
-  // Adiciona o header customizado
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      header: () => <CustomHeader title="Editar Perfil" showBack={true} />,
-    });
-  }, [navigation]);
-
+  // Header interno padronizado com TopBar
+  const [error, setError] = useState<string | null>(null);
   const handleUpdate = async () => {
     if (password && password !== confirmPassword) {
       Alert.alert('Erro', 'As senhas não coincidem.');
@@ -69,12 +64,6 @@ const EditProfileScreen = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Editar Perfil</Text>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
-            <Text style={styles.closeButton}>Voltar</Text>
-        </TouchableOpacity>
-      </View>
       <View style={styles.content}>
         <StyledTextInput
           label="Nome Completo"

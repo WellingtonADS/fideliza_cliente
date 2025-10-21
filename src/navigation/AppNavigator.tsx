@@ -1,6 +1,7 @@
 // src/navigation/AppNavigator.tsx
 import React from 'react';
 import { View, ActivityIndicator, StyleSheet, Text } from 'react-native'; // Adicionado Text
+import { colors } from '../theme/colors';
 import { useAuth } from '../context/AuthContext';
 
 import AuthNavigator from './AuthNavigator';
@@ -27,11 +28,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0A0A2A', // Cor de fundo escura, consistente com o resto do app
+    backgroundColor: colors.background, // Cor de fundo escura, consistente com o resto do app
   },
   loadingText: {
     marginTop: 10,
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 16,
   }
 });

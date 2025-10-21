@@ -13,9 +13,10 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getMyRewardsStatus, redeemReward } from '../services/api';
-import IconComponent from '../components/IconComponent';
 import Toast from 'react-native-toast-message';
-import CustomHeader from '../components/CustomHeader';
+// import CustomHeader from '../components/CustomHeader';
+import ThemedText from '../components/ThemedText';
+import { colors } from '../theme/colors';
 import Card from '../components/Card';
 import ActionButton from '../components/ActionButton';
 
@@ -32,11 +33,7 @@ interface RewardStatus {
 type Props = NativeStackScreenProps<MainStackParamList, 'Rewards'>;
 
 const RewardsScreen = ({ navigation }: Props) => {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      header: () => <CustomHeader title="Recompensas" showBack={true} />,
-    });
-  }, [navigation]);
+  // Removemos o header custom para evitar duplicidade; usamos uma top bar interna padronizada
   const [rewards, setRewards] = useState<RewardStatus[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +44,7 @@ const RewardsScreen = ({ navigation }: Props) => {
       const response = await getMyRewardsStatus();
       setRewards(response.data);
     } catch (err) {
-      setError('Não foi possível carregar os prémios.');
+  setError('Não foi possível carregar os prêmios.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -83,7 +80,7 @@ const RewardsScreen = ({ navigation }: Props) => {
 
     Alert.alert(
       'Confirmar Resgate',
-      `Tem a certeza de que deseja resgatar "${reward.name}" por ${reward.points_required} pontos?`,
+  `Tem certeza de que deseja resgatar "${reward.name}" por ${reward.points_required} pontos?`,
       [
         { text: 'Cancelar', style: 'cancel' },
         { text: 'Resgatar', onPress: redeem }
@@ -94,7 +91,7 @@ const RewardsScreen = ({ navigation }: Props) => {
   if (loading) {
     return (
       <View style={[styles.container, styles.centerContent]}>
-        <ActivityIndicator size="large" color="#FFFFFF" />
+        <ActivityIndicator size="large" color={colors.text} />
       </View>
     );
   }
@@ -102,31 +99,24 @@ const RewardsScreen = ({ navigation }: Props) => {
   if (error) {
     return (
       <View style={[styles.container, styles.centerContent]}>
-        <Text style={styles.errorText}>{error}</Text>
+        <ThemedText style={styles.errorText}>{error}</ThemedText>
       </View>
     );
   }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <IconComponent icon="rewards" size={26} color="#FFFFFF" />
-        <Text style={styles.headerText}>Prêmios</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
-          <Text style={styles.closeButton}>Voltar</Text>
-        </TouchableOpacity>
-      </View>
       <FlatList
         data={rewards}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <Card>
             <View>
-              <Text style={styles.rewardName}>{item.name}</Text>
-              <Text style={styles.rewardDescription}>{item.description}</Text>
+              <ThemedText style={styles.rewardName}>{item.name}</ThemedText>
+              <ThemedText style={styles.rewardDescription}>{item.description}</ThemedText>
             </View>
             <View style={styles.pointsContainer}>
-              <Text style={styles.pointsRequired}>{item.points_required} pts</Text>
+              <ThemedText style={styles.pointsRequired}>{item.points_required} pts</ThemedText>
               <ActionButton
                 title={item.redeemable ? 'Resgatar' : `${item.points_to_redeem} pts restantes`}
                 onPress={() => handleRedeem(item)}
@@ -138,7 +128,7 @@ const RewardsScreen = ({ navigation }: Props) => {
         )}
         ListEmptyComponent={
           <View style={styles.centerContent}>
-            <Text style={styles.emptyText}>Não há prémios disponíveis de momento.</Text>
+            <ThemedText style={styles.emptyText}>Não há prêmios disponíveis no momento.</ThemedText>
           </View>
         }
         contentContainerStyle={{ padding: 20 }}
@@ -150,50 +140,33 @@ const RewardsScreen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0A0A2A',
+    backgroundColor: colors.background,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#1E1E3F',
-    justifyContent: 'space-between',
-  },
+  // header nativo do Navigator em uso
   // goBackButton: {
   //   marginLeft: 16,
   // },
   headerText: {
     marginLeft: 10,
     fontSize: 20,
-    color: '#FFFFFF',
+    color: colors.text,
   },
   container: {
     flex: 1,
-    backgroundColor: '#0A0A2A',
+    backgroundColor: colors.background,
   },
   centerContent: {
     flex: 1,
     justifyContent: 'center',
   },
   errorText: {
-    color: '#FF6B6B',
+    color: colors.error,
     fontSize: 16,
     textAlign: 'center',
   },
-  goBackButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    backgroundColor: '#8282a3ff',
-    borderRadius: 8,
-  },
-  closeButton: {
-    fontSize: 16,
-    color: '#FDD835',
-    fontWeight: 'bold',
-  },
+  // botões do header interno removidos
   card: {
-    backgroundColor: '#1E1E3F',
+    backgroundColor: colors.surface,
     borderRadius: 12,
     padding: 20,
     marginBottom: 15,
@@ -204,11 +177,11 @@ const styles = StyleSheet.create({
   rewardName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.text,
   },
   rewardDescription: {
     fontSize: 14,
-    color: '#B0B0B0',
+    color: colors.textMuted,
     marginTop: 4,
   },
   pointsContainer: {
@@ -217,24 +190,24 @@ const styles = StyleSheet.create({
   pointsRequired: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#FDD835',
+    color: colors.accent,
     marginBottom: 8,
   },
   redeemButton: {
-    backgroundColor: '#3D5CFF',
+    backgroundColor: colors.primary,
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 8,
   },
   redeemButtonDisabled: {
-    backgroundColor: '#4A4A6A',
+    backgroundColor: colors.border,
   },
   redeemButtonText: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontWeight: 'bold',
   },
   emptyText: {
-    color: '#B0B0B0',
+    color: colors.textMuted,
     fontSize: 16,
     marginTop: 50,
   },

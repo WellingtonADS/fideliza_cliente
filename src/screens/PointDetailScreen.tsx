@@ -13,19 +13,14 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { MainStackParamList } from '../navigation/MainNavigator';
 import { getPointTransactionsByCompany } from '../services/api';
 import { PointTransaction } from '../types/points';
-import IconComponent from '../components/IconComponent';
-import CustomHeader from '../components/CustomHeader';
+import ThemedText from '../components/ThemedText';
+import { colors } from '../theme/colors';
 
 type PointDetailScreenRouteProp = RouteProp<MainStackParamList, 'PointDetail'>;
 
 type Props = { navigation: any };
 
 const PointDetailScreen = ({ navigation }: Props) => {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      header: () => <CustomHeader title="Detalhe de Pontos" showBack={true} />,
-    });
-  }, [navigation]);
   const route = useRoute<PointDetailScreenRouteProp>();
   const { companyId } = route.params;
 
@@ -61,7 +56,7 @@ const PointDetailScreen = ({ navigation }: Props) => {
       minute: '2-digit',
     });
 
-    const transactionTitle = isCredit ? 'Pontos Ganhos' : 'Resgate de Prémio';
+    const transactionTitle = isCredit ? 'Pontos ganhos' : 'Resgate de prêmio';
     const transactionSource = item.awarded_by ? `Por: ${item.awarded_by.name}` : '';
 
     return (
@@ -85,7 +80,7 @@ const PointDetailScreen = ({ navigation }: Props) => {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#007bff" />
+        <ActivityIndicator size="large" color={colors.text} />
       </View>
     );
   }
@@ -99,7 +94,7 @@ const PointDetailScreen = ({ navigation }: Props) => {
         style={styles.container}
         contentContainerStyle={transactions.length === 0 ? styles.center : { paddingTop: 8 }}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>Nenhuma transação encontrada.</Text>
+          <ThemedText style={styles.emptyText}>Nenhuma transação encontrada.</ThemedText>
         }
       />
     </View>
@@ -109,23 +104,7 @@ const PointDetailScreen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0A0A2A',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#1E1E3F',
-  },
-  closeButton: {
-    fontSize: 16,
-    color: '#FDD835',
-    fontWeight: 'bold',
-  },
-  headerText: {
-    marginLeft: 10,
-    fontSize: 20,
-    color: '#FFFFFF',
+    backgroundColor: colors.background,
   },
   center: {
     flex: 1,
@@ -134,10 +113,10 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background,
   },
   transactionItem: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.surface,
     paddingVertical: 12,
     paddingHorizontal: 16,
     marginVertical: 4,
@@ -159,16 +138,16 @@ const styles = StyleSheet.create({
   transactionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.text,
   },
   transactionSource: {
     fontSize: 14,
-    color: '#555',
+    color: colors.textMuted,
     marginTop: 2,
   },
   transactionDate: {
     fontSize: 12,
-    color: '#888',
+    color: colors.textMuted,
     marginTop: 4,
   },
   points: {
@@ -176,7 +155,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   emptyText: {
-    color: '#6c757d',
+    color: colors.textMuted,
   },
 
 });

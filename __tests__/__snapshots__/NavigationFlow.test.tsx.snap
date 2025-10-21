@@ -172,6 +172,178 @@ exports[`NavigationFlow mostra fluxo principal quando logado 1`] = `
 }
 `;
 
+exports[`NavigationFlow mostra fluxo principal quando logado 2`] = `
+{
+  "children": [
+    {
+      "children": null,
+      "props": {
+        "onInsetsChange": [Function],
+        "style": [
+          {
+            "flex": 1,
+          },
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+        ],
+      },
+      "type": "RNCSafeAreaProvider",
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": "[...]",
+              "props": {
+                "collapsable": false,
+                "style": [
+                  {
+                    "flex": 1,
+                  },
+                  [
+                    {
+                      "backgroundColor": "rgb(242, 242, 242)",
+                    },
+                    undefined,
+                  ],
+                ],
+              },
+              "type": "RNSScreenContentWrapper",
+            },
+            {
+              "children": "[...]",
+              "props": {
+                "backButtonDisplayMode": undefined,
+                "backButtonInCustomView": false,
+                "backTitle": undefined,
+                "backTitleFontFamily": "System",
+                "backTitleFontSize": undefined,
+                "backTitleVisible": true,
+                "backgroundColor": "rgb(255, 255, 255)",
+                "blurEffect": undefined,
+                "color": "rgb(0, 122, 255)",
+                "direction": "ltr",
+                "disableBackButtonMenu": false,
+                "hidden": true,
+                "hideBackButton": false,
+                "hideShadow": undefined,
+                "largeTitle": undefined,
+                "largeTitleBackgroundColor": undefined,
+                "largeTitleColor": undefined,
+                "largeTitleFontFamily": "System",
+                "largeTitleFontSize": undefined,
+                "largeTitleFontWeight": "700",
+                "largeTitleHideShadow": false,
+                "pointerEvents": "box-none",
+                "style": {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "space-between",
+                  "position": "absolute",
+                  "width": "100%",
+                },
+                "title": "Home",
+                "titleColor": "rgb(28, 28, 30)",
+                "titleFontFamily": "System",
+                "titleFontSize": undefined,
+                "titleFontWeight": "600",
+                "topInsetEnabled": true,
+                "translucent": false,
+              },
+              "type": "RNSScreenStackHeaderConfig",
+            },
+          ],
+          "props": {
+            "activityState": 2,
+            "aria-hidden": false,
+            "collapsable": false,
+            "customAnimationOnSwipe": undefined,
+            "fullScreenSwipeEnabled": undefined,
+            "fullScreenSwipeShadowEnabled": true,
+            "gestureEnabled": undefined,
+            "gestureResponseDistance": {
+              "bottom": -1,
+              "end": -1,
+              "start": -1,
+              "top": -1,
+            },
+            "hasLargeHeader": false,
+            "hideKeyboardOnSwipe": undefined,
+            "homeIndicatorHidden": undefined,
+            "nativeBackButtonDismissalEnabled": false,
+            "navigationBarHidden": undefined,
+            "onAppear": [Function],
+            "onDisappear": [Function],
+            "onDismissed": [Function],
+            "onGestureCancel": [Function],
+            "onHeaderBackButtonClicked": [Function],
+            "onHeaderHeightChange": [Function],
+            "onNativeDismissCancelled": [Function],
+            "onSheetDetentChanged": [Function],
+            "onTransitionProgress": [Function],
+            "onWillAppear": [Function],
+            "onWillDisappear": [Function],
+            "preventNativeDismiss": undefined,
+            "replaceAnimation": "push",
+            "screenOrientation": undefined,
+            "sheetAllowedDetents": [
+              1,
+            ],
+            "sheetCornerRadius": -1,
+            "sheetElevation": 24,
+            "sheetExpandsWhenScrolledToEdge": true,
+            "sheetGrabberVisible": false,
+            "sheetInitialDetent": 0,
+            "sheetInitialDetentIndex": 0,
+            "sheetLargestUndimmedDetent": -1,
+            "sheetLargestUndimmedDetentIndex": -1,
+            "stackAnimation": undefined,
+            "stackPresentation": "push",
+            "statusBarAnimation": undefined,
+            "statusBarHidden": undefined,
+            "statusBarStyle": undefined,
+            "style": {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+              "zIndex": undefined,
+            },
+            "swipeDirection": "horizontal",
+            "transitionDuration": undefined,
+          },
+          "type": "RNSScreen",
+        },
+      ],
+      "props": {
+        "onFinishTransitioning": undefined,
+        "style": {
+          "flex": 1,
+        },
+      },
+      "type": "RNSScreenStack",
+    },
+  ],
+  "props": {
+    "onInsetsChange": [Function],
+    "style": [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ],
+  },
+  "type": "RNCSafeAreaProvider",
+}
+`;
+
 exports[`NavigationFlow mostra telas de autenticação quando não logado 1`] = `
 {
   "children": [

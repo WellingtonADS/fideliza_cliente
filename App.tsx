@@ -1,10 +1,11 @@
 import 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 import React from 'react';
-import { NavigationContainer, LinkingOptions } from '@react-navigation/native';
+import { NavigationContainer, LinkingOptions, DefaultTheme, Theme } from '@react-navigation/native';
 import { AuthProvider } from './src/context/AuthContext';
 import AppNavigator from './src/navigation/AppNavigator';
 import { AuthStackParamList } from './src/navigation/AuthNavigator';
+import { colors } from './src/theme/colors';
 
 // Configuração do linking para deeplink de redefinição de senha
 const linking: LinkingOptions<AuthStackParamList> = {
@@ -21,8 +22,21 @@ const linking: LinkingOptions<AuthStackParamList> = {
 };
 
 const App = () => {
+  const navTheme: Theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: colors.background,
+      card: colors.background,
+      text: colors.text,
+      primary: colors.primary,
+      border: colors.border,
+      notification: colors.accent,
+    },
+  };
+
   return (
-    <NavigationContainer linking={linking}>
+    <NavigationContainer linking={linking} theme={navTheme}>
       <AuthProvider>
         <AppNavigator />
         <Toast />

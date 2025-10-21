@@ -14,22 +14,19 @@ import { AuthStackParamList } from '../navigation/AuthNavigator';
 import StyledTextInput from '../components/StyledTextInput';
 import { requestPasswordRecovery } from '../services/api';
 import IconComponent from '../components/IconComponent';
-import CustomHeader from '../components/CustomHeader';
+import ThemedText from '../components/ThemedText';
+import { colors } from '../theme/colors';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'ForgotPassword'>;
 
 const ForgotPasswordScreen = ({ navigation }: Props) => {
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      header: () => <CustomHeader title="Recuperar Senha" showBack={true} />,
-    });
-  }, [navigation]);
+  // Removemos o header custom para evitar duplicidade; usamos top bar própria padronizada
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handlePasswordReset = async () => {
     if (!email) {
-      Alert.alert('Atenção', 'Por favor, insira o seu e-mail.');
+  Alert.alert('Atenção', 'Por favor, insira seu e-mail.');
       return;
     }
      setIsLoading(true);
@@ -38,7 +35,7 @@ const ForgotPasswordScreen = ({ navigation }: Props) => {
       const response = await requestPasswordRecovery(email);
 
       Alert.alert(
-        'Verifique o seu E-mail',
+  'Verifique seu e-mail',
         response.data.message, // Usa a mensagem vinda diretamente da API
         [{ text: 'OK', onPress: () => navigation.navigate('Login') }]
       );
@@ -47,7 +44,7 @@ const ForgotPasswordScreen = ({ navigation }: Props) => {
     } catch (error) {
       // Mesmo em caso de erro de rede, mostramos uma mensagem genérica por segurança
       Alert.alert(
-        'Verifique o seu E-mail',
+  'Verifique seu e-mail',
         "Se uma conta com este e-mail existir, um link de recuperação foi enviado.",
         [{ text: 'OK', onPress: () => navigation.navigate('Login') }]
       );
@@ -58,22 +55,14 @@ const ForgotPasswordScreen = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <IconComponent icon="recoverPassword" size={26} color="#FFFFFF" />
-        <Text style={styles.headerText}>Recuperar Senha</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
-          <Text style={styles.closeButton}>Voltar</Text>
-        </TouchableOpacity>
-      </View>
       <View style={styles.content}>
-        <Text style={styles.title}>Recuperar Senha</Text>
-        <Text style={styles.subtitle}>
+        <ThemedText style={styles.subtitle}>
           Insira o seu e-mail para receber um link de redefinição.
-        </Text>
+        </ThemedText>
 
         <StyledTextInput
-          label="Email"
-          placeholder="Digite o seu e-mail de registo"
+          label="E-mail"
+          placeholder="Digite seu e-mail de registro"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -82,14 +71,14 @@ const ForgotPasswordScreen = ({ navigation }: Props) => {
 
         <TouchableOpacity style={styles.button} onPress={handlePasswordReset} disabled={isLoading}>
           {isLoading ? (
-            <ActivityIndicator color="#FFFFFF" />
+            <ActivityIndicator color={colors.text} />
           ) : (
-            <Text style={styles.buttonText}>Enviar Link de Recuperação</Text>
+            <ThemedText style={styles.buttonText}>Enviar Link</ThemedText>
           )}
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.footerText}>Voltar para o Login</Text>
+          <ThemedText style={styles.footerText}>Voltar para o Login</ThemedText>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -99,53 +88,54 @@ const ForgotPasswordScreen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   closeButton: {
     fontSize: 16,
-    color: '#FDD835',
+    color: colors.accent,
     fontWeight: 'bold',
   },
   safeArea: {
     flex: 1,
-    backgroundColor: '#0A0A2A',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: '#1E1E3F',
+    backgroundColor: colors.surface,
     justifyContent: 'space-between',
   },
     goBackButton: {
       paddingHorizontal: 12,
       paddingVertical: 6,
-      backgroundColor: '#8282a3ff',
+      backgroundColor: colors.primaryDark,
       borderRadius: 8,
       marginLeft: 16,
     },
   headerText: {
     marginLeft: 10,
     fontSize: 20,
-    color: '#FFFFFF',
+    color: colors.text,
   },
   content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 30,
+    padding: 24,
+    paddingTop: 16,
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.text,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#B0B0B0',
+    color: colors.textMuted,
     marginBottom: 30,
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#3D5CFF',
+    backgroundColor: colors.primary,
     width: '100%',
     padding: 15,
     borderRadius: 12,
@@ -153,11 +143,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 18,
   },
   footerText: {
-    color: '#FDD835',
+    color: colors.accent,
     fontSize: 16,
     marginTop: 20,
     textAlign: 'center',

@@ -14,6 +14,8 @@ import { useAuth } from '../context/AuthContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import StyledTextInput from '../components/StyledTextInput'; // Nosso novo componente
+import ThemedText from '../components/ThemedText';
+import { colors } from '../theme/colors';
 
 
 // Tipagem para as props de navegação
@@ -49,9 +51,7 @@ const LoginScreen = ({ navigation }: Props) => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.content}>
         <Image source={require('../assets/images/logo_fideliza.png')} style={styles.logo} />
-        <Text style={styles.title}>Fideliza+</Text>
-        <Text style={styles.subtitle}>O programa de fidelidade que te valoriza</Text>
-
+  
         <StyledTextInput
           label="Email"
           placeholder="Digite seu e-mail"
@@ -71,18 +71,18 @@ const LoginScreen = ({ navigation }: Props) => {
 
         <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={isLoading}>
           {isLoading ? (
-            <ActivityIndicator color="#FFFFFF" />
+            <ActivityIndicator color={colors.text} />
           ) : (
-            <Text style={styles.buttonText}>Entrar</Text>
+            <ThemedText style={styles.buttonText}>Entrar</ThemedText>
           )}
         </TouchableOpacity>
 
         <View style={styles.footer}>
           <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-            <Text style={styles.footerText}>Esqueceu a senha? <Text style={styles.link}>Clique aqui.</Text></Text>
+            <ThemedText style={styles.footerText}>Esqueceu a senha? <Text style={styles.link}>Clique aqui.</Text></ThemedText>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-            <Text style={styles.footerText}>Não tem conta? <Text style={styles.link}>Clique aqui.</Text></Text>
+            <ThemedText style={styles.footerText}>Não tem conta? <Text style={styles.link}>Clique aqui.</Text></ThemedText>
           </TouchableOpacity>
         </View>
       </View>
@@ -93,18 +93,18 @@ const LoginScreen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0A0A2A',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#1E1E3F',
+    backgroundColor: colors.surface,
   },
   headerText: {
     marginLeft: 10,
     fontSize: 20,
-    color: '#FFFFFF',
+    color: colors.text,
   },
   content: {
     flex: 1,
@@ -120,16 +120,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.text,
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
-    color: '#FFFFFF',
+    color: colors.textMuted,
     marginBottom: 20,
   },
   button: {
-    backgroundColor: '#3D5CFF',
+    backgroundColor: colors.primary,
     width: '100%',
     padding: 15,
     borderRadius: 12,
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -146,12 +146,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footerText: {
-    color: '#B0B0B0',
+    color: colors.textMuted,
     fontSize: 14,
     marginBottom: 10,
   },
   link: {
-    color: '#FDD835', // Um amarelo para destaque
+    color: colors.accent, // Destaque
     fontWeight: 'bold',
   },
 });
